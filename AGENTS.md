@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-Docs + staged config for a local AI coding workstation (opencode harness around a quantized 27B on an RTX 3090). No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and four bash scripts.
+Docs + staged config for the opencode-sage coding workstation harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and four bash scripts.
 
 ## Core workflow: stage → activate → restart
 
