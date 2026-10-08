@@ -4,7 +4,7 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
-## 2026-10-08 — Antigravity Cross-Pollination & Advanced Intelligence Pass
+## 2026-10-08 — SOTA Intelligence, LSP & Genomics Expansion Pass
 
 ### 1. New MCP Server Added
 | Server | Type | Purpose | Source / Rationale |
