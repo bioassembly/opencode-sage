@@ -4,6 +4,16 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-10-09 — FAIR Data Stewardship & First-Principles Explainer Pass
+
+### New Vetted Skills Added
+| Skill | What it Adds | Source / Stars |
+|---|---|---|
+| `fair-data-principles` | Enforces Findable, Accessible, Interoperable, and Reusable (FAIR) standards, Frictionless Data Package schemas (`datapackage.json`), MIMAG genome quality standards, and GSC MIxS metadata across scientific workflows. | Self-authored / Wilkinson et al. (2016 *Sci. Data*) |
+| `first-principles-explainer` | Breaks down bioinformatics pipelines, data engineering, and algorithmic discrepancies from first principles. | Self-authored |
+
+---
+
 ## 2026-10-08 — SOTA Intelligence, LSP & Genomics Expansion Pass
 
 ### 1. New MCP Server Added
