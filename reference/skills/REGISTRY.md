@@ -21,3 +21,4 @@ Format: `- YYYY-MM-DD <skill-name> <- <source repo/url> (stars: N) <one-line not
 - 2026-10-08 webapp-testing <- github.com/anthropics/skills (stars: 180k, Apache-2.0) — Playwright test runner and server lifecycle automation
 - 2026-10-08 mcp-builder <- github.com/anthropics/skills (stars: 180k, Apache-2.0) — protocol guide for building high-quality MCP servers in Python and TypeScript
 - 2026-10-09 first-principles-explainer <- self-authored (in-session self-improvement loop, no external source) — first-principles explainer for bioinformatics/data-pipeline discrepancies with grounded examples
+- 2026-10-09 fair-data-principles <- self-authored (in-session self-improvement loop, Wilkinson et al. 2016) — FAIR principles enforcement, Frictionless schema validation, and MIMAG/MIxS standards for scientific workflows
