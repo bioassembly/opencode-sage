@@ -15,6 +15,7 @@ On session start, and before every non-trivial task:
 2. **Quality bar**: ≥1,000 stars (≥100 for niche bioinformatics); pushed within 12 months; zero malicious patterns; concise YAML frontmatter with actionable description.
 3. **Write** a `SKILL.md` into the skills directory: name matches its folder exactly, description carries trigger keywords (<120 chars), under 80 lines, every line changes behavior.
 4. **Register**: Add the skill to `reference/skills/REGISTRY.md` and announce `[SKILL ADDED: <name>]`.
+5. No source for the target (binary, APK, firmware, built app)? Load `reverse-engineer-anything`; source-level work stays on LSP/Serena-class tools.
 
 ## Multi-Agent & Subagent Guidelines
 

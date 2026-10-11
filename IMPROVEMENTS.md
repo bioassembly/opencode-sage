@@ -4,6 +4,26 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-10-12 — Reverse-Engineering Capability Pass
+
+Hypothesis: a skill-gated REA MCP adds binary/artifact analysis (zero coverage today) at near-zero idle context cost via the `compact` schema profile + load-only-on-match routing.
+
+### 1. New MCP Server Added
+| Server | Type | Purpose | Source / Rationale |
+|---|---|---|---|
+| `rea` | local stdio (`npx -y rea-agents@6.4.0 mcp`, `REA_MCP_INPUT_SCHEMA_PROFILE=compact`, 60s timeout) | Reverse engineering: native binaries, APKs, firmware, Electron/JS, .NET, WASM/EVM with evidence-backed findings | `morluto/rea` (99.9k ⭐, MIT, pushed 2026-10-11). Pinned exact version, no `@latest`. Added to `pin-mcp.sh` coverage. |
+
+### 2. New Vetted Skill Added (1)
+| Skill | What it Adds | Source / Stars |
+|---|---|---|
+| `reverse-engineer-anything` | Auto-activation routing (use-when/don't-use-when vs Serena/`security-audit`/docs tools), host readiness boundary (static-only: no Ghidra/Hopper/IDA installed), evidence contract (observations/inferences/unknowns + Evidence IDs), runtime-capture safety scope | Synthesized from `morluto/rea` `.agents/skills/reverse-engineer-anything/SKILL.md` (vetted: injection scan clean) + `reference/skills/REGISTRY.md` entry |
+
+### 3. Boundary & Deferral
+- Native decompilation (`open_binary` → pseudocode) deferred until Ghidra is installed; skill says so instead of failing. Static JS/Electron + .NET + ELF-layout + PE-resource routes work now.
+- Full A/B eval per `docs/evaluation.md` deferred to first real REA task (no binary target available at staging time); null/pending result recorded here per loop rules.
+
+---
+
 ## 2026-10-09 — FAIR Data Stewardship & First-Principles Explainer Pass
 
 ### New Vetted Skills Added

@@ -15,7 +15,7 @@ resolve() { # package[@tag] -> package@exact-version
   npm view "$spec" version 2>/dev/null | tail -n1
 }
 
-for pkg in "@modelcontextprotocol/server-sequential-thinking" "@playwright/mcp" "@modelcontextprotocol/server-memory"; do
+for pkg in "@modelcontextprotocol/server-sequential-thinking" "@playwright/mcp" "@modelcontextprotocol/server-memory" "rea-agents"; do
   ver="$(resolve "$pkg")"
   [ -n "$ver" ] || { echo "could not resolve $pkg" >&2; exit 1; }
   echo "pinning $pkg -> $ver"

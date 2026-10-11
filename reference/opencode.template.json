@@ -136,6 +136,20 @@
       "environment": {
         "MEMORY_FILE_PATH": "__MEMORY_PATH__"
       }
+    },
+    "rea": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "rea-agents@6.4.0",
+        "mcp"
+      ],
+      "enabled": true,
+      "timeout": 60000,
+      "environment": {
+        "REA_MCP_INPUT_SCHEMA_PROFILE": "compact"
+      }
     }
   },
   "tool_output": {
