@@ -34,9 +34,9 @@ Installed directly into `~/.local/bin`:
 - **`fetch`**: Lightweight static web content extraction (`mcp-server-fetch`).
 - **`playwright`**: Headless browser automation for dynamic single-page web applications (`@playwright/mcp@0.0.79`).
 
-### 3. Vetted Agent Skills (20 Total)
+### 3. Vetted Agent Skills (21 Total)
 - **Core Software Engineering**: `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
-- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`.
+- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`, `publish-results`.
 - **Context & Reasoning Discipline**: `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing`.
 
 ### 4. Custom Subagents (`~/.config/opencode/agent/`)
