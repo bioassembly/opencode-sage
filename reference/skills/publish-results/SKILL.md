@@ -1,85 +1,75 @@
 ---
 name: publish-results
-description: Consolidate and organize pipeline execution outputs into a clean, numbered, user-facing results/ deliverable directory while strictly withholding proprietary code and internal environments. Use when asked to summarize or publish pipeline results, create a clean deliverable folder, or structure Nextflow-style publishDir outputs.
+description: Consolidate and organize outputs from custom, multi-step sketch/bash/python pipelines into a clean, numbered, user-facing results/ deliverable directory while strictly withholding proprietary code and internal environments. Use ONLY when manually asked to publish, summarize, or package pipeline results into a client-facing deliverable folder.
 ---
 
 # Publish Pipeline Results (`publish-results`)
 
-This skill standardizes the organization of scientific and data pipeline outputs into a clean, user-facing `results/` deliverable directory, adhering to FAIR principles and Nextflow-style `publishDir` conventions.
+This skill standardizes the organization of outputs from custom, manually-crafted pipelines (bash scripts, python steps, sketch workflows without Nextflow) into a clean, professional, user-facing `results/` deliverable directory. It ensures that outputs are logically ordered, self-documenting, and free from internal execution clutter.
 
 > **CRITICAL POLICY (TRADE SECRETS & INTELLECTUAL PROPERTY)**:
-> Never copy internal execution scripts (`.py`, `.sh`, `command.sh`, `nextflow.config`, `.nf`), conda/pip environment manifests (`environment.yml`, `requirements.txt`), or intermediate scratch caches into the user-facing deliverable directory. Only publish clean, sanitized data matrices, reports, cross-reference tables, and user manifests.
+> Never copy internal execution scripts (`.py`, `.sh`, `command.sh`, `.nf`, Makefiles), environment definitions (`environment.yml`, `requirements.txt`), git tracking directories, or temporary scratch logs into the client-facing deliverable directory. Only publish clean, sanitized data matrices, reports, cross-reference tables, and user documentation.
 
 ---
 
-## Standard Deliverable Architecture
+## Deliverable Architecture (General Pattern)
 
-Structure the destination `results/` folder using numbered prefixes (`0_` to `N_`) to provide clear sequential navigation:
+Always structure the client-facing `results/` folder using sequentially numbered prefixes (`0_` to `N_`) reflecting the analytical progression from inputs to final synthesis:
 
 ```
 results/
-├── README.md                           # Comprehensive manifest, column dictionary, and user guide
-├── 0_curated_targets/                  # Curated target panels, reference mappings & expansions
-│   └── curated_target_ko_expansion.tsv # Clean cross-reference tables (no redundant columns or prefixes)
-├── 1_master_tables/                    # Consolidated master tables (e.g. raw and normalized CPM)
-│   ├── raw_master_table.tsv
-│   └── normalized_CPM_master_table.tsv
-├── 2_category_profiles/                # Broad category/sector level tables (e.g., COG_C, COG_G, etc.)
-│   ├── <CATEGORY_A>/ (raw/ and normalized/)
-│   └── <CATEGORY_B>/ (raw/ and normalized/)
-├── 3_target_profiles/                  # Curated target metabolic profiles
-│   ├── raw/                            # Raw count/depth wide abundance matrices
-│   └── normalized/                     # Normalized (CPM/TPM) wide abundance matrices
-├── 4_taxonomic_linkage/                # Contig/MAG linkage & taxon-stratified abundance tables
-│   ├── mag_mapping/                    # Contig-to-genome mappings
-│   └── stratified_abundance/           # Rank-deconvoluted profiles (Phylum down to Species)
-└── 5_candidate_bins/                   # Filtered & ranked top candidate genomes/strains
-    ├── candidate_bins_screening.tsv    # Quantitative multi-criteria ranking matrix
-    └── candidate_summary_report.md     # Executive summary report
+├── README.md                           # Master manifest, directory tree, and column dictionaries
+├── 0_curated_inputs/                   # Filter lists, target panels, curated dictionaries, or metadata
+├── 1_consolidated_master/              # Unified full-scale feature tables (raw + normalized)
+├── 2_broad_profiles/                   # Broad category/sector/taxonomic level abundance matrices
+├── 3_target_profiles/                  # Curated/targeted focus subsets (raw/ and normalized/)
+├── 4_stratified_associations/          # Cross-linking features (e.g. taxon-to-function, sample mappings)
+└── 5_ranked_candidates/                # Final synthesis, prioritized hits, or executive summary reports
 ```
+
+*(Folder names and total count should adapt naturally to the specific pipeline's domains, keeping the sequential `0_` to `N_` numbering).*
 
 ---
 
-## Execution Protocol
+## Runbook & Execution Steps
 
-### Step 1: Create the Directory Tree
-Create all target directories without using symlinks:
+### Step 1: Discover & Map Upstream Outputs
+Inspect the sketch pipeline's step directories (e.g. `phase*`, `step*`, `01_*`, `output/`):
+1. Identify **user-facing deliverables** (final tables, summary statistics, figures, reports).
+2. Identify **contextual metadata** needed by the user (curated input targets, reference lists).
+3. Identify **proprietary code to withhold** (python logic, bash glue, internal config).
+
+### Step 2: Create the Numbered Deliverable Directory Tree
+Create physical directories without symlinks:
 ```bash
-mkdir -p results/{0_curated_targets,1_master_tables,2_category_profiles,3_target_profiles,4_taxonomic_linkage,5_candidate_bins}
+mkdir -p results/{0_curated_inputs,1_master_tables,2_broad_profiles,3_target_profiles,4_stratified_associations,5_ranked_candidates}
 ```
 
-### Step 2: Populate Deliverables
-Copy outputs from upstream analysis phases:
-1. **Target Panels & Mapping (`0_curated_targets/`)**:
-   - Provide curated target definitions, gene symbols, EC numbers, and pathway associations.
-   - Clean column names: avoid redundant prefix tokens (e.g., use `definition`, `genes`, `EC`, `pathways` instead of `canonical_...` or `observed_...`).
-   - Strip duplicate text (e.g., remove `[EC:...]` inside definition strings if an explicit `EC` column exists).
-2. **Master Datasets (`1_master_tables/`)**:
-   - Deliver both raw quantification (e.g., read count or mean depth) and normalized metrics (e.g., CPM).
-3. **Stratified Abundance & Targets (`2_` & `3_`)**:
-   - Ensure clean `raw/` and `normalized/` subfolder separation.
-4. **Taxonomy & Candidate Genomes (`4_` & `5_`)**:
-   - Include genome quality rankings (CheckM/CheckM2 completeness, contamination) alongside functional repertoire metrics.
+### Step 3: Populate & Sanitize Outputs
+1. **Raw vs. Normalized Separation**: Whenever quantitative features are presented (e.g., read counts, CPM, TPM, FPKM), provide clean `raw/` and `normalized/` subfolders or explicitly distinct file names (`raw_*.tsv` and `normalized_*.tsv`).
+2. **Table Schema Sanitization**:
+   - Strip redundant embedded strings (e.g., remove duplicate `[EC:...]` within definition fields if an explicit `EC` column is present).
+   - Use clean, user-friendly column headers (avoid raw pipeline internal prefixes like `observed_`, `canonical_`, `tmp_`).
+3. **Physical Copies Only**: Use `cp -r` or direct file generation. Never create symlinks inside `results/` so the folder can be packaged, zipped, or rsynced across systems without broken references.
 
-### Step 3: Sanitize Intellectual Property & Trade Secrets
-Verify that no proprietary code slipped into `results/`:
+### Step 4: Strict IP & Code Sanitization
+Ensure no internal scripts or environments slipped in:
 ```bash
-find results/ -type f \( -name "*.py" -o -name "*.sh" -o -name "*.nf" -o -name "*.yml" -o -name "*.yaml" -o -name "requirements.txt" \) -delete
+find results/ -type f \( -name "*.py" -o -name "*.sh" -o -name "*.nf" -o -name "*.yml" -o -name "*.yaml" -o -name "requirements.txt" -o -name "Makefile" \) -delete
 ```
 
-### Step 4: Verify Zero Symlinks & File Integrity
-Ensure full portability across filesystems:
+### Step 5: Portability & Integrity Verification
 ```bash
-# Verify no symlinks exist
-find results/ -type l
+# 1. Assert zero symlinks
+test $(find results/ -type l | wc -l) -eq 0 || echo "ERROR: Symlinks detected!"
 
-# Validate non-empty deliverable files
+# 2. Check for empty files
 find results/ -type f -empty
 ```
 
-### Step 5: Write `README.md` Deliverable Manifest
-Every `results/` folder must include a top-level `README.md` containing:
-- High-level project summary and sample cohort definitions.
+### Step 6: Author Master `README.md` Deliverable Manifest
+Every deliverable folder must include a top-level `README.md` containing:
+- Project title, date, and brief description of the dataset and sample cohorts.
 - Visual ASCII tree layout of the numbered directory structure.
-- Column dictionaries for complex matrices and summary tables.
-- Clear guidance on how to interpret key target profiles (e.g., normalized CPM tables, taxonomic origins, candidate strains).
+- Detailed file descriptions and column dictionaries for all tabular deliverables.
+- Guidance for client interpretation (e.g., which table to load for plotting, how normalization was calculated).
