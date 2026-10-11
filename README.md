@@ -9,7 +9,7 @@
 ## 🌟 Architecture & Design Philosophy
 
 1. **Native Strengths & LSP Compiler Ground Truth**: Leverages opencode's native `"lsp": true` engine coupled with 12 language servers pre-installed in `~/.local/bin` (covering Python, PHP, TypeScript, Bash, Markdown/Quarto, YAML, HTML, CSS, JSON, ESLint, Tailwind). The agent receives compiler-grade symbol search, type diagnostics, jump-to-definition, and semantic refactoring directly without LLM hallucination.
-2. **Curated Model Context Protocol (MCP) Layer**: Outfitted with a focused, high-throughput MCP server layer: `context7` for real-time framework documentation, `deepwiki` for remote AI-indexed GitHub documentation without token cost, `sequential-thinking` for structured planning, `fetch` for fast static web requests, and `playwright` for headless browser workflows.
+2. **Curated Model Context Protocol (MCP) Layer**: Outfitted with a focused, high-throughput MCP server layer: `context7` for real-time framework documentation, `deepwiki` for remote AI-indexed GitHub documentation without token cost, `sequential-thinking` for structured planning, `fetch` for fast static web requests, `playwright` for headless browser workflows, `memory` for durable cross-session project memory, and `rea` (pinned `rea-agents`, compact schema) for reverse engineering binaries and artifacts with no source.
 3. **Persistent Project Memory**: Powered by `@modelcontextprotocol/server-memory`, storing a local knowledge graph (`~/.config/opencode/memory.json`) that preserves durable project architectural decisions, user preferences, and conventions across context compactions and new sessions.
 4. **Autonomous Execution with Strict Safeguards**: Outfitted with fine-grained permissions and an anchored Deny list (`rm -rf /`, `mkfs`, raw block device writes, unvetted pipe-to-shell executions) combined with subagent permission isolation (`edit: deny` for `reviewer` and `skeptic`).
 
@@ -33,10 +33,12 @@ Installed directly into `~/.local/bin`:
 - **`memory`**: Local MCP knowledge graph for durable project memory (`~/.config/opencode/memory.json`).
 - **`fetch`**: Lightweight static web content extraction (`mcp-server-fetch`).
 - **`playwright`**: Headless browser automation for dynamic single-page web applications (`@playwright/mcp@0.0.79`).
+- **`rea`**: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — local stdio (`npx -y rea-agents@6.4.0 mcp`, compact input-schema profile, 60s timeout). Static routes work with zero extra installs; native decompilation needs Ghidra (not bundled).
 
-### 3. Vetted Agent Skills (21 Total)
+### 3. Vetted Agent Skills (24 Total)
 - **Core Software Engineering**: `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
-- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`, `pipeline-sketch-results`.
+- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
+- **Reverse Engineering**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — binaries, APKs, firmware, Electron apps, WASM/EVM with no source; auto-activates on no-source targets, stays out of source-level work.
 - **Context & Reasoning Discipline**: `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing`.
 
 ### 4. Custom Subagents (`~/.config/opencode/agent/`)
@@ -84,7 +86,7 @@ bash scripts/doctor.sh
 2. Deploys `reference/opencode.template.json` to `~/.config/opencode/opencode.json` with dynamic endpoint and memory path resolution.
 3. Installs subagents into `~/.config/opencode/agent/`.
 4. Installs slash commands into `~/.config/opencode/command/`.
-5. Syncs all 20 vetted skills into `~/.config/opencode/skills/`.
+5. Syncs all 24 vetted skills into `~/.config/opencode/skills/`.
 6. Deploys global agent protocol rules to `~/.config/opencode/AGENTS.md`.
 
 ---
@@ -118,17 +120,24 @@ opencode-sage/
 ├── docs/                       # Architecture, context engineering & guides
 │   ├── architecture.md
 │   ├── context-engineering.md
+│   ├── evaluation.md             # Harness-change experiment loop (hypothesize → freeze → cases → compare → decide)
+│   ├── operations.md
 │   ├── quantization.md
+│   ├── replicate.md
+│   ├── security-hardening.md
+│   ├── troubleshooting.md
 │   └── components/             # Detailed docs for LSP, MCP, skills, config, agents
+├── evals/                      # Frozen eval cases + results convention (see evals/README.md)
 ├── reference/                  # Source of truth installed into ~/.config/opencode
 │   ├── AGENTS.md               # Global agent instructions
 │   ├── opencode.template.json  # Staged config template
 │   ├── agents/                 # Subagent definitions (reviewer, skeptic, bioinformatician)
 │   ├── commands/               # Slash commands (review, red-team, checkpoint, gpu, doctor)
-│   └── skills/                 # 20 curated agent skills + REGISTRY.md
+│   └── skills/                 # 24 curated agent skills + REGISTRY.md
 └── scripts/                    # Automation scripts
     ├── activate.sh             # Idempotent installer with auto-backup
     ├── doctor.sh               # Health check diagnostic suite
+    ├── export-trajectory.sh    # Export sessions as JSONL for SFT datasets
     ├── install-lsps.sh         # LSP compiler installer
     ├── pin-mcp.sh              # MCP package version pin tool
     └── gpu-prep.sh             # GPU power cap script
