@@ -75,6 +75,7 @@ env/
 work/
 
 # Operating System & Editors
+.serena/
 .DS_Store
 Thumbs.db
 *.swp

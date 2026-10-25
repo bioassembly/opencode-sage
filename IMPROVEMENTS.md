@@ -4,6 +4,22 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-10-25 — Matt Pocock Engineering Skills Pass
+
+### 1. New Vetted Skills Added (5)
+| Skill | What it Adds | Source / Stars |
+|---|---|---|
+| `grill-me` | Relentless design-tree interview loop in rounds with concrete recommended defaults to stress-test plans before code is written. | `mattpocock/skills` (302.6k ⭐, MIT) |
+| `domain-modeling` | Active domain modeling discipline, inline `GLOSSARY.md` maintenance, and ADR authoring when trade-offs crystallize. | `mattpocock/skills` (302.6k ⭐, MIT) |
+| `codebase-design` | Deep modules vs shallow modules (Ousterhout), high leverage, locality, and seam discipline. | `mattpocock/skills` (302.6k ⭐, MIT) |
+| `to-spec` | Spec-driven synthesis: converts conversation and codebase context into verified technical specifications. | `mattpocock/skills` (302.6k ⭐, MIT) |
+| `to-tickets` | Vertical tracer-bullet slicing with blocking dependency chains and expand-contract refactors. | `mattpocock/skills` (302.6k ⭐, MIT) |
+
+### 2. New Slash Command Added
+- `/grill-me`: Interactive design-tree interview to stress-test architecture & plans before building.
+
+---
+
 ## 2026-10-12 — Reverse-Engineering Capability Pass
 
 Hypothesis: a skill-gated REA MCP adds binary/artifact analysis (zero coverage today) at near-zero idle context cost via the `compact` schema profile + load-only-on-match routing.

@@ -4,10 +4,15 @@ Skills are modular, on-demand procedure guides that instruct the agent on how to
 
 All skills live in [`reference/skills/`](../../reference/skills/) and are installed into `~/.config/opencode/skills/` via `scripts/activate.sh`.
 
-## Catalog (20 Skills)
+## Catalog (29 Skills)
 
 ### 1. Core Software Engineering & Discipline
 - **`agentic-coding`**: Working agreements for coding loops: plan-then-edit, minimal diffs, verify each step.
+- **`grill-me`** *(mattpocock/skills, 302k ⭐)*: Relentless design-tree interview loop in rounds with concrete defaults to stress-test plans before code is written.
+- **`domain-modeling`** *(mattpocock/skills, 302k ⭐)*: Active domain modeling discipline, GLOSSARY.md maintenance, and ADR authoring when trade-offs crystallize.
+- **`codebase-design`** *(mattpocock/skills, 302k ⭐)*: Deep modules vs shallow modules (Ousterhout), high leverage, locality, and seam discipline.
+- **`to-spec`** *(mattpocock/skills, 302k ⭐)*: Spec-driven synthesis: converts conversation and codebase context into verified technical specifications.
+- **`to-tickets`** *(mattpocock/skills, 302k ⭐)*: Vertical tracer-bullet slicing with blocking dependency chains and expand-contract refactors.
 - **`test-driven-development`** *(superpowers, 296k ⭐)*: The iron law of TDD: no production code without a failing test first. Kills premature completions.
 - **`systematic-debugging`** *(superpowers)*: 4-phase root-cause loop (reproduce → hypothesize → test minimally → fix cause). Max 3 attempts before escalating.
 - **`verification-before-completion`** *(superpowers)*: Evidence gate: completion claims require executed test/lint/build output.
@@ -23,8 +28,14 @@ All skills live in [`reference/skills/`](../../reference/skills/) and are instal
 - **`biopython`** *(K-Dense-AI, 47.9k ⭐)*: Sequence manipulation, structure parsing (PDB), phylogenetic trees, and programmatic NCBI Entrez queries.
 - **`statistical-data-visualization`**: Verification of statistical plots, bias detection, and interpretability for scientific reports.
 - **`tool-installation`**: Clean conda/bioconda environment installation guidelines, preventing pip failures on Python 3.14.
+- **`pipeline-sketch-results`**: Manual pipeline results ingestion and publication with selective ingestion and evidence citations.
+- **`fair-data-principles`**: Enforce and audit FAIR data principles (Findable, Accessible, Interoperable, Reusable) across scientific datasets and pipelines.
 
-### 3. Context Discipline & Utility
+### 3. Reverse Engineering
+- **`reverse-engineer-anything`** *(morluto/rea, 99.9k ⭐)*: Multi-target reverse engineering for native binaries, APKs, firmware, Electron/JS, and WASM/EVM.
+
+### 4. Context Discipline & Utility
+- **`first-principles-explainer`**: Break down complex bioinformatics, data pipelines, and algorithmic logic from first principles.
 - **`token-efficiency`**: Context budget management for local models on limited VRAM.
 - **`skill-acquisition`**: Search trust ladder, vet (stars, maintenance, security scan), synthesize, and register new skills.
 - **`skill-evaluation`**: Quantitative benchmarking and A/B comparison for prompts and skill changes.

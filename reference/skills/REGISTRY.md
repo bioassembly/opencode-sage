@@ -9,6 +9,7 @@ Format: `- YYYY-MM-DD <skill-name> <- <source repo/url> (stars: N) <one-line not
 - 2026-08-22 statistical-data-visualization <- self-authored (in-session self-improvement loop, no external source) — viz correctness/bias checks for bioinformatics reports
 - 2026-08-22 tool-installation <- self-authored (in-session self-improvement loop, no external source) — conda/bioconda installs, pip-on-py3.14 avoidance
 - 2026-08-23 pdf-inplace-editing <- self-authored (in-session self-improvement loop, no external source) — zero-layout-drift PDF editing/anonymization: content-stream byte swaps + raster re-lettering + pixel-diff verification (pdf_edit.py: scan/swap/reletter/verify)
+- 2026-08-23 token-efficiency <- self-authored (in-session self-improvement loop, no external source) — context-window and token budget discipline for local models on limited VRAM
 - 2026-08-23 systematic-debugging <- adapted from github.com/obra/superpowers — 4-phase root-cause loop, condensed for local 27B
 - 2026-08-23 verification-before-completion <- adapted from github.com/obra/superpowers — evidence-gated completion claims
 - 2026-08-25 skill-maker <- synthesized from github.com/anthropics/skills + github.com/obra/superpowers (writing-skills) — skill authoring standard: TDD loop, SDO descriptions, progressive disclosure
@@ -23,3 +24,8 @@ Format: `- YYYY-MM-DD <skill-name> <- <source repo/url> (stars: N) <one-line not
 - 2026-10-09 first-principles-explainer <- self-authored (in-session self-improvement loop, no external source) — first-principles explainer for bioinformatics/data-pipeline discrepancies with grounded examples
 - 2026-10-09 fair-data-principles <- self-authored (in-session self-improvement loop, Wilkinson et al. 2016) — FAIR principles enforcement, Frictionless schema validation, and MIMAG/MIxS standards for scientific workflows
 - 2026-10-12 reverse-engineer-anything <- github.com/morluto/rea (stars: 99.9k, MIT) — binary/APK/firmware/Electron/WASM-EVM reverse engineering via pinned rea-agents@6.4.0 MCP (compact schema); native decompile deferred (no Ghidra/Hopper/IDA on host)
+- 2026-10-25 grill-me <- github.com/mattpocock/skills (stars: 302.6k, MIT) — relentless design-tree interview loop in rounds with recommended defaults to stress-test plans before code is written
+- 2026-10-25 domain-modeling <- github.com/mattpocock/skills (stars: 302.6k, MIT) — active domain modeling, GLOSSARY.md maintenance, and ADR authoring when trade-offs crystallize
+- 2026-10-25 codebase-design <- github.com/mattpocock/skills (stars: 302.6k, MIT) — deep modules vs shallow modules (Ousterhout), leverage, locality, and seam discipline
+- 2026-10-25 to-spec <- github.com/mattpocock/skills (stars: 302.6k, MIT) — spec-driven development turning discussion and codebase context into verified technical specifications
+- 2026-10-25 to-tickets <- github.com/mattpocock/skills (stars: 302.6k, MIT) — tracer-bullet vertical slice tickets with explicit blocking edges and expand-contract refactoring
