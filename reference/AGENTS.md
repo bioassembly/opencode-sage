@@ -19,6 +19,7 @@ On session start, and before every non-trivial task:
 
 ## Multi-Agent & Subagent Guidelines
 
+- For pre-implementation design stress-testing: run `/grill-me` to interview and resolve the design tree in rounds before building.
 - For pre-implementation red-teaming: invoke the `skeptic` subagent (`/red-team`) to attack hidden assumptions, failure modes, and simpler alternatives before writing code.
 - For pre-commit code review: invoke the `reviewer` subagent (`/review`) to audit the working diff for correctness, security, and repo conventions.
 - For bioinformatics, Nextflow DSL2 pipelines, Quarto reports, and HPC jobs: use the `bioinformatician` subagent persona or skills.
