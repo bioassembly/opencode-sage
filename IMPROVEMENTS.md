@@ -8,7 +8,7 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 What:
 1. Added `orchestrator` subagent (`reference/agents/orchestrator.md`): decomposes complex initiatives into parallelizable workstreams, spawns and tracks specialized subagents, and synthesizes outputs.
-2. Added `hybrid-routing` skill (`reference/skills/hybrid-routing/`): adaptive cognitive workload partitioning dispatching abstract/conceptual reasoning to frontier models while offloading deterministic instruction tasks to local AI workers via toggleable scripts (`scripts/toggle.sh`, `scripts/probe_worker.sh`, `scripts/dispatch_local.py`).
+2. Added `hybrid-routing` skill (`reference/skills/hybrid-routing/`): 3-tier adaptive cognitive routing partitioning abstract/conceptual reasoning to Gemini 4 Argon, standard execution/review to Gemini 3.8 Flash, and deterministic instruction tasks to local AI workers via `probe_worker.sh` and `dispatch_local.py`, activating on-demand with `/hybrid` without toggle complexity.
 3. Hardened `scripts/activate.sh` and `scripts/doctor.sh`: automatic backup retention (keeps 5 most recent timestamped backups, prunes older ones); `doctor.sh` checks installed skills/agents parity against `reference/` and supports `--prune-backups`; injects Authorization header into `/models` probe.
 4. Synced documentation and links (`README.md`, `AGENTS.md`, `docs/components/skills.md`, `docs/components/agents.md`, `evals/README.md`) to 31 skills and 4 subagents.
 Why: Prevents context/token exhaustion on repetitive mechanical tasks via local routing; coordinates multi-agent swarms for broad initiatives; eliminates unbounded backup directory growth; ensures continuous parity between reference and live config.
