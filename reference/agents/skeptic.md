@@ -1,7 +1,6 @@
 ---
 description: Read-only pre-implementation red team. Attacks a plan before any code is written — failure modes, hidden assumptions, simpler alternatives. Use after planning, before build.
 mode: subagent
-model: workplace-ai/qwen3.8-27b-thinking
 temperature: 0.4
 top_p: 0.9
 color: error

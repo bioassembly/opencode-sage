@@ -35,7 +35,7 @@ fi
 if [[ -z "$BASE_URL" && -f "$DST/opencode.json" ]]; then
   BASE_URL="$(jq -r '.provider[]?.options.baseURL // empty' "$DST/opencode.json" 2>/dev/null | head -n1)"
 fi
-BASE_URL="${BASE_URL:-http://10.4.100.102:8888/v1}"
+BASE_URL="${BASE_URL:-http://10.4.100.102:8080/v1}"
 
 if [[ -f "$DST/opencode.json" ]]; then
   mkdir -p "$BACKUP"
@@ -45,6 +45,16 @@ if [[ -f "$DST/opencode.json" ]]; then
     [ -d "$DST/$d" ] && cp -r "$DST/$d" "$BACKUP/"
   done
   echo "Backup created at: $BACKUP"
+
+  # Prune old backups, retaining the 5 most recent
+  mapfile -t BACKUP_DIRS < <(find "$DST" -maxdepth 1 -type d -name "backup-*" | sort)
+  if [[ ${#BACKUP_DIRS[@]} -gt 5 ]]; then
+    PRUNE_COUNT=$((${#BACKUP_DIRS[@]} - 5))
+    for ((i=0; i<PRUNE_COUNT; i++)); do
+      rm -rf "${BACKUP_DIRS[$i]}"
+    done
+    echo "[-] Pruned $PRUNE_COUNT old backup(s) (retaining latest 5)."
+  fi
 fi
 
 echo "[-] Configuring opencode.json (BaseURL: $BASE_URL)..."
@@ -54,6 +64,16 @@ jq --arg key "$KEY" --arg mem "$MEMORY_PATH" --arg url "$BASE_URL" \
         elif type == "string" and . == "__BASE_URL__" then $url
         else . end)' \
   "$SRC/opencode.template.json" > "$DST/opencode.json"
+
+# Auto-sync limits from the loaded server model; keep template values if unreadable. output=ctx: llama-server clamps generation at context window.
+CTX="$(curl -s --max-time 8 -H "Authorization: Bearer $KEY" "$BASE_URL/models" 2>/dev/null | jq -r '[.data[] | select(.loaded==true or .status.value=="loaded") | (.meta.n_ctx // .context_length) // empty] | first // empty' 2>/dev/null || true)"
+if [[ "$CTX" =~ ^[0-9]+$ ]]; then
+  TMP="$(mktemp)"
+  jq --argjson ctx "$CTX" '.provider.strata.models[]?.limit = {context: $ctx, output: $ctx}' "$DST/opencode.json" > "$TMP" && mv "$TMP" "$DST/opencode.json"
+  echo "[-] Synced limits from server (context=output=$CTX)."
+else
+  echo "[-] Server context unreadable; kept template limits."
+fi
 
 echo "[-] Installing agents, commands, and skills..."
 for pair in "agents:agent" "commands:command" "skills:skills"; do

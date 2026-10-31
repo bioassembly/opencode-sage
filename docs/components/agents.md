@@ -16,9 +16,9 @@ opencode ships two built-in agents (`build` = edit-capable, `plan` = read-only p
 
 Tool-calling needs determinism (malformed JSON breaks the loop); planning benefits from diversity. One global temperature serves neither. If you enable Qwen3.8 thinking mode, raise `build` to ~0.6/0.95 (Qwen3.8-recommended) — the current values assume it is off.
 
-## Thinking-mode rollout (experimental)
+## Thinking mode
 
-`plan` and `skeptic` run on the `qwen3.8-27b-thinking` model entry (`reasoning: true`) — slower, deeper reasoning where latency is acceptable. `reviewer` deliberately stays on the non-thinking entry until the experiment validates the model id against your server: if the id isn't served, reviews would break, and review is the agent you least want silently down. Verify with `curl -s http://localhost:8888/v1/models`, A/B per [evaluation.md](../evaluation.md), then extend or revert.
+Strata serves one model (`qwen3.8-flash-next-iq3_s`, `reasoning: true`, `reasoning_effort: xhigh`), so all agents inherit it — no per-agent `model` overrides until the server serves more than one id. If an id isn't served, agents break silently; verify with `curl -s http://10.4.100.102:8080/v1/models` before adding any override, A/B per [evaluation.md](../evaluation.md).
 
 ## The reviewer pattern
 

@@ -1,6 +1,6 @@
 ---
 name: reverse-engineer-anything
-description: Reverse-engineer binaries, APKs, firmware, Electron, WASM/EVM via REA. Use for no-source targets: decompile, analyze.
+description: "Reverse-engineer binaries, APKs, firmware, Electron, WASM/EVM via REA. Use for no-source targets: decompile, analyze."
 ---
 
 # Reverse-Engineer Anything (REA)

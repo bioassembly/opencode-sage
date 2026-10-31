@@ -5,38 +5,32 @@ Annotated walkthrough of [`reference/opencode.template.json`](../../reference/op
 ## Model & Provider
 
 ```jsonc
-"model": "workplace-ai/qwen3.8-27b",        // primary agent model
-"small_model": "workplace-ai/qwen3.8-27b",  // auxiliary calls -> same local endpoint
+"model": "strata/qwen3.8-flash-next-iq3_s",        // primary agent model
+"small_model": "strata/qwen3.8-flash-next-iq3_s",  // auxiliary calls -> same local endpoint
 ```
 
 ```jsonc
-"provider.workplace-ai": {
+"provider.strata": {
   "npm": "@ai-sdk/openai-compatible",
-  "name": "IGF Workplace AI (Komputer Putih)",
+  "name": "White-PC Strata",
   "options": {
-    "baseURL": "__BASE_URL__",               // e.g. http://10.4.100.102:8888/v1 or http://localhost:8888/v1
+    "baseURL": "__BASE_URL__",               // e.g. http://10.4.100.102:8080/v1
     "apiKey": "__UNSLOTH_API_KEY__"          // substituted at install time
   },
   "models": {
-    "qwen3.8-27b": {
-      "name": "IGF Workplace AI",
+    "qwen3.8-flash-next-iq3_s": {
+      "name": "White-PC Strata (IQ3_S)",
       "tool_call": true,
       "temperature": true,
       "reasoning": true,
-      "limit": { "context": 262144, "output": 8192 },
-      "reasoning_effort": "xhigh"
-    },
-    "qwen3.8-27b-thinking": {
-      "name": "Qwen 3.8 Local (thinking)",
-      "tool_call": true,
-      "temperature": true,
-      "reasoning": true,
-      "limit": { "context": 262144, "output": 8192 },
-      "reasoning_effort": "xhigh"
+      "limit": { "context": 262144, "output": 262144 },  // output=context: generate until window full
+      "options": { "reasoningEffort": "xhigh" }
     }
   }
 }
 ```
+
+`limit.context`/`limit.output` are auto-synced from the server's `/models` (`meta.n_ctx`, `output` = `context`) on every `activate.sh` run; template values are only the offline fallback. v2 config schema requires BOTH keys — an omitted/unknown key (e.g. top-level `reasoning_effort`) invalidates the whole provider block and opencode silently drops it.
 
 ## Context Discipline
 

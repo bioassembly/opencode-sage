@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-Docs + staged config for the opencode-sage coding workstation harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and four bash scripts.
+Docs + staged config for the opencode-sage coding workstation harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and six bash scripts.
 
 ## Core workflow: stage → activate → restart
 
@@ -25,7 +25,7 @@ Never edit `~/.config/opencode/` directly: the next `activate.sh` run overwrites
 ## Non-obvious details
 
 - `activate.sh` maps plural→singular on install: `reference/agents` → `~/.config/opencode/agent`, `reference/commands` → `command`; skills copy as whole directories, excluding `REGISTRY.md`.
-- "Qwen3.8-27B" is the intentional model name used consistently across all docs — do not "correct" it.
+- Model serving: White-PC Strata llama-server serves dynamic model IDs (default: "qwen3.8-flash-next-iq3_s"); limits auto-sync via activate.sh.
 - Each file in `docs/components/` is self-contained; extract what you need without reading the rest.
 - Restore procedure lives in `BACKUP.md`: quit opencode first, then restore, then relaunch.
 
