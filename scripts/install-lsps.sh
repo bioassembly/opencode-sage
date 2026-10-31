@@ -4,6 +4,8 @@
 # Idempotent; safe to re-run.
 set -euo pipefail
 
+mkdir -p "$HOME/.local/bin"
+
 command -v npm >/dev/null || { echo "npm not found — see docs/replicate.md Stage 1." >&2; exit 1; }
 
 echo "==> npm packages (prefix: $(npm config get prefix))"
