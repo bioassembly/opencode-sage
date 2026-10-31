@@ -4,6 +4,18 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-10-31 — Swarm Orchestrator, Hybrid Routing & Doctor Hardening
+
+What:
+1. Added `orchestrator` subagent (`reference/agents/orchestrator.md`): decomposes complex initiatives into parallelizable workstreams, spawns and tracks specialized subagents, and synthesizes outputs.
+2. Added `hybrid-routing` skill (`reference/skills/hybrid-routing/`): adaptive cognitive workload partitioning dispatching abstract/conceptual reasoning to frontier models while offloading deterministic instruction tasks to local AI workers via toggleable scripts (`scripts/toggle.sh`, `scripts/probe_worker.sh`, `scripts/dispatch_local.py`).
+3. Hardened `scripts/activate.sh` and `scripts/doctor.sh`: automatic backup retention (keeps 5 most recent timestamped backups, prunes older ones); `doctor.sh` checks installed skills/agents parity against `reference/` and supports `--prune-backups`; injects Authorization header into `/models` probe.
+4. Synced documentation and links (`README.md`, `AGENTS.md`, `docs/components/skills.md`, `docs/components/agents.md`, `evals/README.md`) to 31 skills and 4 subagents.
+Why: Prevents context/token exhaustion on repetitive mechanical tasks via local routing; coordinates multi-agent swarms for broad initiatives; eliminates unbounded backup directory growth; ensures continuous parity between reference and live config.
+Source: Self-improvement loop; user-orchestrator pattern; Conventional Commits & repo guidelines.
+
+---
+
 ## 2026-10-27 — Provider migration: IGF Workplace AI → White-PC Strata
 
 What: template provider `workplace-ai` (Unsloth Studio `:8888`, dead) replaced by `strata` (llama-server `:8080`, model `qwen3.8-flash-next-iq3_s`, `limit.context` = `limit.output` = server-reported `n_ctx` 262144). `activate.sh`/`doctor.sh` fallback URLs → `:8080`; auto-sync parses llama-server's payload (`status.value=="loaded"`, `meta.n_ctx`; still accepts `loaded`/`context_length`). Per-agent thinking-model overrides removed — server serves one id. `reasoning_effort` moved from top-level model key to `options.reasoningEffort` (v2: top-level legacy `reasoning`/`temperature` are omitted; unknown keys invalidate the whole provider block → opencode skips it silently). `compaction.prune`/`tail_turns` dropped (v2-omitted legacy).

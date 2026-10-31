@@ -30,3 +30,4 @@ Format: `- YYYY-MM-DD <skill-name> <- <source repo/url> (stars: N) <one-line not
 - 2026-10-25 to-spec <- github.com/mattpocock/skills (stars: 302.6k, MIT) — spec-driven development turning discussion and codebase context into verified technical specifications
 - 2026-10-25 to-tickets <- github.com/mattpocock/skills (stars: 302.6k, MIT) — tracer-bullet vertical slice tickets with explicit blocking edges and expand-contract refactoring
 - 2026-10-25 git-commit-convention <- self-authored (sources: conventionalcommits.org 1.0.0, GitHub Docs closing-keywords + force-push guidance, cbea.ms seven rules) — history-first house-style inference, Conventional Commits format, imperative summaries, closing keywords, amend/force-with-lease fix path
+- 2026-10-31 hybrid-routing <- self-authored (feature-flagged adaptive cognitive workload partitioning: frontier model vs local worker offloading)

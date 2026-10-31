@@ -35,13 +35,14 @@ Installed directly into `~/.local/bin`:
 - **`playwright`**: Headless browser automation for dynamic single-page web applications (`@playwright/mcp@0.0.79`).
 - **`rea`**: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — local stdio (`npx -y rea-agents@6.4.0 mcp`, compact input-schema profile, 60s timeout). Static routes work with zero extra installs; native decompilation needs Ghidra (not bundled).
 
-### 3. Vetted Agent Skills (30 Total)
+### 3. Vetted Agent Skills (31 Total)
 - **Core Software Engineering**: `grill-me` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
 - **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
 - **Reverse Engineering**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — binaries, APKs, firmware, Electron apps, WASM/EVM with no source; auto-activates on no-source targets, stays out of source-level work.
-- **Context & Reasoning Discipline**: `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing`.
+- **Context & Reasoning Discipline**: `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing`, `hybrid-routing`.
 
 ### 4. Custom Subagents (`~/.config/opencode/agent/`)
+- **`orchestrator`**: Autonomous swarm meta-orchestrator deconstructing complex initiatives into decoupled workstreams and coordinating parallel subagents.
 - **`reviewer`**: Read-only code reviewer evaluating diffs against correctness bugs, security vulnerabilities, and repo conventions (`edit: deny`).
 - **`skeptic`**: Adversarial senior engineer attacking implementation plans before writing code (hidden assumptions, failure modes, simpler alternatives, `edit: deny`).
 - **`bioinformatician`**: Specialized persona for Nextflow DSL2, nf-core conventions, Quarto reporting, conda environments, and genomic QC workflows.
@@ -87,7 +88,7 @@ bash scripts/doctor.sh
 2. Deploys `reference/opencode.template.json` to `~/.config/opencode/opencode.json` with dynamic endpoint and memory path resolution.
 3. Installs subagents into `~/.config/opencode/agent/`.
 4. Installs slash commands into `~/.config/opencode/command/`.
-5. Syncs all 30 vetted skills into `~/.config/opencode/skills/`.
+5. Syncs all 31 vetted skills into `~/.config/opencode/skills/`.
 6. Deploys global agent protocol rules to `~/.config/opencode/AGENTS.md`.
 
 ---
@@ -134,7 +135,7 @@ opencode-sage/
 │   ├── opencode.template.json  # Staged config template
 │   ├── agents/                 # Subagent definitions (reviewer, skeptic, bioinformatician)
 │   ├── commands/               # Slash commands (review, red-team, checkpoint, gpu, doctor)
-│   └── skills/                 # 30 curated agent skills + REGISTRY.md
+│   └── skills/                 # 31 curated agent skills + REGISTRY.md
 └── scripts/                    # Automation scripts
     ├── activate.sh             # Idempotent installer with auto-backup
     ├── doctor.sh               # Health check diagnostic suite

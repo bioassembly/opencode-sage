@@ -1,6 +1,6 @@
 # Agents & Sampling
 
-opencode ships two built-in agents (`build` = edit-capable, `plan` = read-only planning). This harness retunes both and adds three subagents. Definitions live in [`reference/agents/`](../reference/agents/) and the `"agent"` block of [`reference/opencode.template.json`](../reference/opencode.template.json).
+opencode ships two built-in agents (`build` = edit-capable, `plan` = read-only planning). This harness retunes both and adds four subagents. Definitions live in [`reference/agents/`](../reference/agents/) and the `"agent"` block of [`reference/opencode.template.json`](../reference/opencode.template.json).
 
 ## Roster
 
@@ -8,6 +8,7 @@ opencode ships two built-in agents (`build` = edit-capable, `plan` = read-only p
 |---|---|---|---|---|
 | `build` | primary | 0.3 / 0.85 | full | Implementation work; low-ish temp for reliable tool-call JSON |
 | `plan` | primary | 0.4 / 0.9 | read-only | Architecture/planning; slight latitude for exploration |
+| `orchestrator` | subagent | 0.3 / 0.85 | full | Swarm meta-orchestrator: decomposes initiatives into decoupled workstreams and coordinates parallel subagents |
 | `reviewer` | subagent | 0.2 / 0.8 | **edit: deny**, bash: ask | Strict code review after multi-file edits, before commits |
 | `bioinformatician` | subagent | 0.3 / 0.85 | full | Domain expert: Nextflow/nf-core, Quarto, conda, HPC conventions |
 | `skeptic` | subagent | 0.4 / 0.9 | **edit: deny**, bash: ask | Red-teams a *plan* before implementation: assumptions, failure modes, simpler alternatives (beta) |
