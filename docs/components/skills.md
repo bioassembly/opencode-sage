@@ -4,7 +4,7 @@ Skills are modular, on-demand procedure guides that instruct the agent on how to
 
 All skills live in [`reference/skills/`](../../reference/skills/) and are installed into `~/.config/opencode/skills/` via `scripts/activate.sh`.
 
-## Catalog (29 Skills)
+## Catalog (30 Skills)
 
 ### 1. Core Software Engineering & Discipline
 - **`agentic-coding`**: Working agreements for coding loops: plan-then-edit, minimal diffs, verify each step.
@@ -13,6 +13,7 @@ All skills live in [`reference/skills/`](../../reference/skills/) and are instal
 - **`codebase-design`** *(mattpocock/skills, 302k ⭐)*: Deep modules vs shallow modules (Ousterhout), high leverage, locality, and seam discipline.
 - **`to-spec`** *(mattpocock/skills, 302k ⭐)*: Spec-driven synthesis: converts conversation and codebase context into verified technical specifications.
 - **`to-tickets`** *(mattpocock/skills, 302k ⭐)*: Vertical tracer-bullet slicing with blocking dependency chains and expand-contract refactors.
+- **`git-commit-convention`**: History-first house-style inference, Conventional Commits format, imperative summaries, closing keywords.
 - **`test-driven-development`** *(superpowers, 296k ⭐)*: The iron law of TDD: no production code without a failing test first. Kills premature completions.
 - **`systematic-debugging`** *(superpowers)*: 4-phase root-cause loop (reproduce → hypothesize → test minimally → fix cause). Max 3 attempts before escalating.
 - **`verification-before-completion`** *(superpowers)*: Evidence gate: completion claims require executed test/lint/build output.

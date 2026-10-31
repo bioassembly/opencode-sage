@@ -4,20 +4,17 @@
 
 ```
 opencode session
-  │  provider: workplace-ai (OpenAI-compatible client)
+  │  provider: strata (OpenAI-compatible client)
   ▼
-Unsloth Studio proxy — http://localhost:8888/v1
-  │  (auth, model registry, fine-tune integration)
-  ▼
-llama-server (~/.unsloth/llama.cpp/)
+llama-server "White-PC Strata" — http://10.4.100.102:8080/v1
   │  (GGUF inference, KV cache, /v1 endpoints)
   ▼
-Qwen3.8-27B GGUF (Q6_K) · RTX 3090 (24 GB) · full GPU residency (-ngl 999, zero layers in RAM)
+Qwen3.8-flash-next GGUF (IQ3_S) · n_ctx 262144 · served model auto-discovered via /models
 ```
 
-This deployment serves through **Unsloth Studio only**: opencode → :8888 → llama-server. Fine-tuned models appear automatically after export — no config change beyond the model id.
+This deployment serves one model directly through llama-server: opencode → :8080. `activate.sh` syncs `limit.context` from the server on every run; output is uncapped (no `max_tokens`). Fine-tuned models appear automatically after export — no config change beyond the model id.
 
-> Direct llama-server serving (`:8080`) is possible with any llama.cpp build but is not part of this deployment. If you ever add it, remember only one process may hold VRAM at a time.
+> Unsloth Studio (`:8888`) is retired from this deployment. If you ever route through it again, remember only one process may hold VRAM at a time.
 
 ## 2. The harness around the model
 
@@ -91,4 +88,4 @@ This repo generalizes that pattern: `reference/` is the source of truth, `script
 - **Plaintext local API key** — acceptable single-user; mitigations in [SECURITY.md](../SECURITY.md).
 - **Five MCP servers = fixed token tax** — each was kept only if it earns its schema bytes; adding a sixth requires removing something.
 - **Playwright is expensive** — reserved for JS-rendered targets; static content goes through `fetch`/curl.
-- **Studio proxy adds a hop** — traded for zero-config model management and the fine-tune→serve loop.
+- **No Studio proxy hop** — direct llama-server serving trades the fine-tune→serve auto-registry for one fewer layer.

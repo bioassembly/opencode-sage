@@ -4,6 +4,14 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-10-27 — Provider migration: IGF Workplace AI → White-PC Strata
+
+What: template provider `workplace-ai` (Unsloth Studio `:8888`, dead) replaced by `strata` (llama-server `:8080`, model `qwen3.8-flash-next-iq3_s`, `limit.context` = `limit.output` = server-reported `n_ctx` 262144). `activate.sh`/`doctor.sh` fallback URLs → `:8080`; auto-sync parses llama-server's payload (`status.value=="loaded"`, `meta.n_ctx`; still accepts `loaded`/`context_length`). Per-agent thinking-model overrides removed — server serves one id. `reasoning_effort` moved from top-level model key to `options.reasoningEffort` (v2: top-level legacy `reasoning`/`temperature` are omitted; unknown keys invalidate the whole provider block → opencode skips it silently). `compaction.prune`/`tail_turns` dropped (v2-omitted legacy).
+Why: user report — IGF Workplace AI endpoint gone, config default pointed at a dead provider; server reports `n_ctx 262144` but old parser (`loaded`/`context_length`) matched nothing, so limits never synced; user wants generation to run to the window, not a small output cap.
+Source: live `GET :8080/v1/models`; opencode v2.0.24 runtime log (provider skipped as malformed) + opencode.ai/config.json v2 schema (limit requires context AND output; model entry rejects unknown keys).
+
+---
+
 ## 2026-10-25 — Matt Pocock Engineering Skills Pass
 
 ### 1. New Vetted Skills Added (5)
@@ -17,6 +25,14 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ### 2. New Slash Command Added
 - `/grill-me`: Interactive design-tree interview to stress-test architecture & plans before building.
+
+---
+
+## 2026-10-12 — Auto-Sync Model Limits + Output=Context
+
+What: `scripts/activate.sh` now reads `context_length` of the `loaded==true` model from `$BASE_URL/models` on every run and sets `limit.context` = `limit.output` for all `workplace-ai` models; template fallbacks set to 124288/124288. Unreachable/unreported server keeps template values with a warning, never fails activation.
+Why: hardcoded `limit.context: 262144` vs server `124288` meant auto-compaction (~90% threshold) never fired before server 400s; manual resync on every `-c` change was toil; user wants full-window outputs.
+Source: opencode docs `/models` (explicit `limit` required for custom OpenAI-compatible; no detection) + `/compaction` (`buffer` defaults to 10% of limit).
 
 ---
 

@@ -23,10 +23,10 @@ n=3 minimum per case when comparing variants; report mean ± spread.
 
 | File | Type | Catches |
 |---|---|---|
-| [api-accuracy.md](api-accuracy.md) | API accuracy | context7 value, model drift |
-| [multi-step-edit.md](multi-step-edit.md) | Multi-step edit | agentic-coding discipline, LSP value |
-| [retrieval.md](retrieval.md) | Retrieval | token-efficiency ladder |
-| [long-horizon-checkpoint.md](long-horizon-checkpoint.md) | Long-horizon | `/checkpoint` + NOTES.md protocol surviving compaction/restart |
-| [injection-canary.md](injection-canary.md) | Refusal/hygiene | prompt-injection posture |
+| [api-accuracy.md](cases/api-accuracy.md) | API accuracy | context7 value, model drift |
+| [multi-step-edit.md](cases/multi-step-edit.md) | Multi-step edit | agentic-coding discipline, LSP value |
+| [retrieval.md](cases/retrieval.md) | Retrieval | token-efficiency ladder |
+| [long-horizon-checkpoint.md](cases/long-horizon-checkpoint.md) | Long-horizon | `/checkpoint` + NOTES.md protocol surviving compaction/restart |
+| [injection-canary.md](cases/injection-canary.md) | Refusal/hygiene | prompt-injection posture |
 
 Scratch dirs live under `/tmp/opencode/evals/<case>/` — recreatable from each case's Setup section.
