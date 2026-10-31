@@ -84,13 +84,13 @@ else
 fi
 
 # 5. Remote MCP Server Reachability
-if curl -s -X POST https://mcp.context7.com/mcp --max-time 4 -H "Content-Type: application/json" -d '{}' &>/dev/null; then
+if curl -s -f -X POST https://mcp.context7.com/mcp --max-time 4 -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","method":"ping","id":1}' &>/dev/null; then
   check_pass "Context7 remote MCP endpoint responsive"
 else
   check_warn "Context7 remote MCP endpoint unreachable or slow"
 fi
 
-if curl -s -X POST https://mcp.deepwiki.com/mcp --max-time 4 -H "Content-Type: application/json" -d '{}' &>/dev/null; then
+if curl -s -f -X POST https://mcp.deepwiki.com/mcp --max-time 4 -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","method":"ping","id":1}' &>/dev/null; then
   check_pass "DeepWiki remote MCP endpoint responsive"
 else
   check_warn "DeepWiki remote MCP endpoint unreachable or slow"
