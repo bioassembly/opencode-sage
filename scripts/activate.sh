@@ -6,6 +6,7 @@
 # - Updates reference/AGENTS.md
 # Idempotent. Rollback path is printed at the end.
 set -euo pipefail
+umask 077
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC="$REPO/reference"

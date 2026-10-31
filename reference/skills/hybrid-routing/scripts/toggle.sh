@@ -34,7 +34,8 @@ case "$ACTION" in
   status)
     ENABLED=$(jq -r '.enabled' "$CONFIG_FILE")
     ENDPOINT=$(jq -r '.local_endpoint' "$CONFIG_FILE")
-    PROBE=$(bash "$(dirname "$0")/probe_worker.sh" 2>/dev/null || echo '{"available": false}')
+    PROBE=$(bash "$(dirname "$0")/probe_worker.sh" 2>/dev/null || true)
+    [ -z "$PROBE" ] && PROBE='{"available": false}'
     WORKER_STATUS=$(echo "$PROBE" | jq -r 'if .available then "ONLINE (" + .endpoint + ", " + .model + ", " + (.latency_ms|tostring) + "ms)" else "OFFLINE" end')
     echo "=== Hybrid Routing Status ==="
     echo "State:          $([ "$ENABLED" = "true" ] && echo "ENABLED (Hybrid active)" || echo "DISABLED (Pure frontier)")"

@@ -29,7 +29,7 @@ export_session() {
   local sid="$1" outdir="${2:-$PWD/trajectories}"
   mkdir -p "$outdir"
   python3 - "$DB" "$sid" "$outdir" <<'PY'
-import sqlite3, sys, json, datetime, subprocess, os
+import sqlite3, sys, json, datetime, subprocess, os, csv
 db, sid, outdir = sqlite3.connect(sys.argv[1]), sys.argv[2], sys.argv[3]
 s = db.execute("SELECT id, slug, title, model, directory, tokens_input, tokens_output, time_created FROM session WHERE id=? OR slug=?", (sid, sid)).fetchone()
 if not s:
@@ -52,11 +52,11 @@ with open(path, "w") as f:
         f.write(json.dumps(rec, ensure_ascii=False) + "\n"); n += 1
 manifest = os.path.join(outdir, "manifest.csv")
 new = not os.path.exists(manifest)
-with open(manifest, "a") as m:
-    w = m.write if new else (lambda line: m.write(line))
+with open(manifest, "a", newline="") as f:
+    writer = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
     if new:
-        m.write("file,session_id,title,model,tokens_in,tokens_out,created,directory\n")
-    m.write(f'{os.path.basename(path)},{sid},"{(title or "")[:80]}","{model_id}",{ti or 0},{to or 0},{date},{directory or ""}\n')
+        writer.writerow(["file", "session_id", "title", "model", "tokens_in", "tokens_out", "created", "directory"])
+    writer.writerow([os.path.basename(path), sid, (title or "")[:80], model_id, ti or 0, to or 0, date, directory or ""])
 print(f"exported {n} messages -> {path}")
 print("REVIEW FOR SECRETS before training/sharing.")
 PY
