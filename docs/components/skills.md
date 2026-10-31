@@ -4,7 +4,7 @@ Skills are modular, on-demand procedure guides that instruct the agent on how to
 
 All skills live in [`reference/skills/`](../../reference/skills/) and are installed into `~/.config/opencode/skills/` via `scripts/activate.sh`.
 
-## Catalog (30 Skills)
+## Catalog (31 Skills)
 
 ### 1. Core Software Engineering & Discipline
 - **`agentic-coding`**: Working agreements for coding loops: plan-then-edit, minimal diffs, verify each step.
@@ -43,6 +43,7 @@ All skills live in [`reference/skills/`](../../reference/skills/) and are instal
 - **`skill-maker`**: Red-Green-Refactor authoring loop for agent skills.
 - **`web-scraping`**: Structured data extraction from static and client-rendered web pages.
 - **`pdf-inplace-editing`**: Pixel-diff verified in-place PDF editing and redaction.
+- **`hybrid-routing`**: Adaptive cognitive workload partitioning: dispatch abstract reasoning to frontier models while offloading deterministic instruction tasks to local workers.
 
 ## Provenance
 
