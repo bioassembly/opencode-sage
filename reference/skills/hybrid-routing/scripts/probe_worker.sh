@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
-# Probes local and LAN LLM inference servers (llama-server, vLLM, Ollama, Strata)
+# Probes Tier 3 local/LAN LLM inference servers (llama-server, vLLM, Ollama, Strata)
 # Returns JSON status: {"available": bool, "endpoint": string, "model": string, "latency_ms": number}
 set -uo pipefail
 
-CONFIG_FILE="${HOME}/.gemini/config/hybrid-routing.json"
-CUSTOM_ENDPOINT=""
+CUSTOM_ENDPOINT="${LOCAL_LLM_ENDPOINT:-}"
+CONFIG_GEMINI="${HOME}/.gemini/config/hybrid-routing.json"
+CONFIG_OPENCODE="${HOME}/.config/opencode/hybrid-routing.json"
 
-if [ -f "$CONFIG_FILE" ]; then
-  CUSTOM_ENDPOINT=$(jq -r '.local_endpoint // empty' "$CONFIG_FILE" 2>/dev/null || true)
+if [ -z "$CUSTOM_ENDPOINT" ] && [ -f "$CONFIG_GEMINI" ]; then
+  CUSTOM_ENDPOINT=$(jq -r '.local_endpoint // empty' "$CONFIG_GEMINI" 2>/dev/null || true)
+fi
+if [ -z "$CUSTOM_ENDPOINT" ] && [ -f "$CONFIG_OPENCODE" ]; then
+  CUSTOM_ENDPOINT=$(jq -r '.local_endpoint // empty' "$CONFIG_OPENCODE" 2>/dev/null || true)
 fi
 
 ENDPOINTS=(
@@ -24,7 +28,7 @@ for ep in "${ENDPOINTS[@]}"; do
   END_TIME=$(date +%s%3N 2>/dev/null || python3 -c 'import time; print(int(time.time()*1000))')
   
   if [ -n "$RESPONSE" ]; then
-    MODEL_ID=$(echo "$RESPONSE" | jq -r '.data[0].id // .models[0].name // "unknown"' 2>/dev/null || echo "active")
+    MODEL_ID=$(echo "$RESPONSE" | jq -r '.data[0].id // .models[0].name // "local-worker"' 2>/dev/null || echo "local-worker")
     LATENCY=$(( END_TIME - START_TIME ))
     echo "{\"available\": true, \"endpoint\": \"$ep\", \"model\": \"$MODEL_ID\", \"latency_ms\": $LATENCY}"
     exit 0

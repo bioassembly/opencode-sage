@@ -43,7 +43,7 @@ All skills live in [`reference/skills/`](../../reference/skills/) and are instal
 - **`skill-maker`**: Red-Green-Refactor authoring loop for agent skills.
 - **`web-scraping`**: Structured data extraction from static and client-rendered web pages.
 - **`pdf-inplace-editing`**: Pixel-diff verified in-place PDF editing and redaction.
-- **`hybrid-routing`**: Adaptive cognitive workload partitioning: dispatch abstract reasoning to frontier models while offloading deterministic instruction tasks to local workers.
+- **`hybrid-routing`**: 3-tier adaptive cognitive routing: dispatch abstract reasoning to Gemini 4 Argon, standard execution to Gemini 3.8 Flash, and mechanical tasks to local AI workers.
 
 ## Provenance
 

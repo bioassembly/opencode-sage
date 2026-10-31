@@ -1,99 +1,85 @@
 ---
 name: hybrid-routing
-description: "Adaptive cognitive tier routing: dispatch abstract/conceptual reasoning to frontier models while offloading deterministic instruction tasks to local AI workers to preserve tokens. Features toggle on/off."
+description: "Adaptive 3-tier cognitive routing: dispatch abstract concepts and red-teaming to Gemini 4 Argon, standard implementation and reviews to Gemini 3.8 Flash, and mechanical tasks to local AI workers to preserve tokens."
 ---
 
-# Hybrid Routing (Adaptive Cognitive Workload Partitioning)
+# Hybrid Routing (3-Tier Adaptive Cognitive Workload Partitioning)
 
-The context window and token quota on frontier models (e.g. Gemini Pro, Argon, Claude 3.7 Sonnet) are high-value resources. Spending frontier tokens on mechanical boilerplate, file slicing, lint fixing, or syntax translations burns budget without cognitive benefit. Conversely, asking smaller local models (e.g., Qwen 27B, local llama-server) to solve abstract architecture or subtle concurrency bugs produces hallucinations.
+Frontier models like **Gemini 4 Argon** excel at high-entropy conceptual reasoning, subtle architectural trade-offs, and adversarial stress-testing. Spending frontier tokens on mechanical boilerplate, syntax translation, or formatting burns token quota without cognitive value. Conversely, smaller local models produce hallucinations when asked to design deep architectures or trace complex race conditions.
 
-**Hybrid Routing** partitions work dynamically based on cognitive complexity.
+**Hybrid Routing** partitions work across **3 cognitive tiers** dynamically without manual toggle overhead:
 
-> [!NOTE]
-> This skill is **developmental** and feature-flagged. It can be toggled ON or OFF at any time.
-
----
-
-## 1. Feature Flag & State Toggle
-
-Hybrid routing status is stored in `~/.gemini/config/hybrid-routing.json`.
-
-```bash
-# Check current routing status & probe local worker
-bash ~/.gemini/config/skills/hybrid-routing/scripts/toggle.sh status
-
-# Enable hybrid routing (activates local worker offloading)
-bash ~/.gemini/config/skills/hybrid-routing/scripts/toggle.sh on
-
-# Disable hybrid routing (forces 100% frontier execution)
-bash ~/.gemini/config/skills/hybrid-routing/scripts/toggle.sh off
-
-# Point to custom local/LAN worker endpoint
-bash ~/.gemini/config/skills/hybrid-routing/scripts/toggle.sh set-endpoint http://10.4.100.102:8080/v1
-```
-
-When **DISABLED**, the agent bypasses all local routing logic and operates purely on the host model without extra overhead.
+1. **Tier 1 (Frontier Reasoning):** Gemini 4 Argon (`pro` / `argon`)
+2. **Tier 2 (Fast Frontier Execution):** Gemini 3.8 Flash (`flash` / `inherit`)
+3. **Tier 3 (Local Instruction Worker):** Local Model (llama-server / vLLM / Ollama / LAN Strata at `http://10.4.100.102:8080/v1` or `localhost:8080`)
 
 ---
 
-## 2. Cognitive Workload Taxonomy
+## 1. 3-Tier Cognitive Workload Taxonomy
 
-Before executing any non-trivial multi-step subtask, classify each step:
-
-| Tier | Category | Examples | Target Model |
+| Tier | Engine / Model | Cognitive Profile | Workload & Task Scope |
 |---|---|---|---|
-| **Tier 1: Abstract / Conceptual** | System Architecture | Designing module boundaries, seams, ports/adapters, domain modeling | **Frontier Model** (`pro`, `inherit`, Argon) |
-| **Tier 1: Abstract / Conceptual** | Pre-Implementation Red-Teaming | Attacking hidden assumptions, blast radius, failure modes (`skeptic`) | **Frontier Model** (`pro`) |
-| **Tier 1: Abstract / Conceptual** | Deep Debugging & Root Cause | Race conditions, memory leaks, subtle off-by-one errors, DSL2 topological DAG flows | **Frontier Model** (`pro`, `inherit`) |
-| **Tier 1: Abstract / Conceptual** | Critical Code Review | Semantic correctness, security vulnerabilities, API invariants (`reviewer`) | **Frontier Model** (`pro`) |
-| **Tier 2: Deterministic / Instruction** | Mechanical Edits | Lint fixes, adding missing imports, docstring additions, formatting | **Local Worker** or `flash_lite` subagent |
-| **Tier 2: Deterministic / Instruction** | Transformation & Scaffolding | JSON to YAML/TS conversion, boilerplate CRUD, regex data parsing | **Local Worker** (`dispatch_local.py`) |
-| **Tier 2: Deterministic / Instruction** | Search & Slicing | File scanning, counting occurrences, extracting structured line slices | **Local Worker** / Local CLI |
-| **Tier 2: Deterministic / Instruction** | Test Suite Execution | Running pytest, npm test, cargo test and summarizing raw logs | **Local Worker** / Bash Tool |
+| **Tier 1: Frontier / Conceptual** | **Gemini 4 Argon** (`pro`, Argon) | High-entropy reasoning, deep conceptual synthesis | • System architecture, deep module interfaces, domain modeling<br>• Pre-implementation red-teaming (`skeptic` subagent)<br>• Non-deterministic root-cause debugging (race conditions, async concurrency, DAG flows)<br>• Critical security threat modeling & ADR trade-offs |
+| **Tier 2: Fast Execution & Review** | **Gemini 3.8 Flash** (`flash`, `inherit`) | High-velocity balanced execution & agentic tooling | • Multi-file code implementation and targeted refactoring<br>• Unit & regression test suite authoring<br>• Code review of git working diffs (`reviewer` subagent)<br>• Active tool calling (Serena LSP navigation, command execution)<br>• Fast summarization & subagent coordination |
+| **Tier 3: Local Worker / Mechanical** | **Local Model** (`dispatch_local.py`, Qwen 27B, llama-server) | Deterministic instruction following (0 cloud tokens) | • Lint error fixes, formatting, import sorting<br>• Data schema conversions (JSON to TS/YAML/Pydantic/Proto)<br>• Repetitive boilerplate scaffolding & mock data fixtures<br>• Regex slicing, line counting, file structure summaries<br>• Raw compiler/test failure log parsing and truncation |
 
 ---
 
-## 3. Execution Protocol
+## 2. Dynamic Routing Flowchart
 
 ```mermaid
 flowchart TD
-    Task["Incoming Task / Substep"] --> CheckToggle{"Hybrid Routing Enabled?"}
-    CheckToggle -- No --> RunFrontier["Execute directly on Frontier Model"]
-    CheckToggle -- Yes --> Classify{"Task Complexity"}
-    Classify -- "Abstract / Conceptual / Red-Team" --> RunFrontier
-    Classify -- "Deterministic / Mechanical Instruction" --> ProbeLocal{"Probe Local Worker"}
-    ProbeLocal -- "Online (Latency < 2000ms)" --> DispatchLocal["Offload via dispatch_local.py"]
-    ProbeLocal -- "Offline / Unreachable" --> SubagentTier["Fallback: invoke_subagent(model='flash_lite')"]
-    DispatchLocal --> VerifyOutput{"Verify Result with Narrow Check"}
-    SubagentTier --> VerifyOutput
-    VerifyOutput -- "Valid" --> AcceptResult["Accept Output (Tokens Saved)"]
-    VerifyOutput -- "Invalid / Hallucinated" --> RunFrontier
+    Request["Incoming Task or Step"] --> Classify{"Cognitive Complexity"}
+    
+    Classify -- "Abstract / Architecture / Red-Team / Concurrency" --> Tier1["Tier 1: Gemini 4 Argon (pro)"]
+    Classify -- "Implementation / Multi-File / Test Suite / Review" --> Tier2["Tier 2: Gemini 3.8 Flash (flash / inherit)"]
+    Classify -- "Deterministic / Formatting / Schema / Slicing" --> Probe3{"Probe Tier 3 Local Worker"}
+    
+    Probe3 -- "Online (Latency < 2000ms)" --> Tier3["Tier 3: Local LLM (dispatch_local.py)"]
+    Probe3 -- "Offline / Unreachable" --> FallbackTier2["Fallback to Tier 2: Gemini 3.8 Flash"]
+    
+    Tier3 --> Verify3{"Verify Result (Syntax / Compiler / Diff)"}
+    Verify3 -- "Valid" --> Accept["Accept Output (0 Cloud Tokens Billed)"]
+    Verify3 -- "Invalid / Hallucinated" --> FallbackTier2
 ```
+
+---
+
+## 3. Activation via `/hybrid`
+
+Whenever `/hybrid` is called or this skill is active, execute the following protocol:
 
 ### Step 1: Probe Local Worker Availability
 Run the probe script:
 ```bash
-~/.gemini/config/skills/hybrid-routing/scripts/probe_worker.sh
+bash ~/.gemini/config/skills/hybrid-routing/scripts/probe_worker.sh
 ```
-Probe checks in order:
-1. Custom endpoint from `~/.gemini/config/hybrid-routing.json`
+The probe scans:
+1. `LOCAL_LLM_ENDPOINT` environment variable (if exported)
 2. `http://localhost:8080/v1` (Local llama-server / vLLM)
-3. `http://10.4.100.102:8080/v1` (LAN inference server / White-PC Strata)
+3. `http://10.4.100.102:8080/v1` (LAN inference server / Strata)
 4. `http://localhost:11434/v1` (Local Ollama)
 
-### Step 2: Offload Deterministic Instruction Tasks
-When local worker is online, dispatch the prompt:
-```bash
-python3 ~/.gemini/config/skills/hybrid-routing/scripts/dispatch_local.py \
-  --prompt "Convert this JSON schema into a TypeScript interface: ..." \
-  --max-tokens 1024
-```
+Output returns JSON status:
+`{"available": true, "endpoint": "http://10.4.100.102:8080/v1", "model": "Qwen2.5-Coder-27B-Instruct", "latency_ms": 42}`
 
-### Step 3: Safe Fallback Guarantee
-- If the local worker returns exit code 2 (unreachable), immediately fall back:
-  1. Option A: Use `invoke_subagent` with `Model: "flash_lite"`.
-  2. Option B: Complete the step in the current frontier session.
-- **Never stop or throw an error to the user** due to an offline local worker.
+### Step 2: Workload Partitioning & Dispatch
+- **For Abstract Reasoning / Red-Teaming**:
+  Invoke subagents with `Model: "pro"` (e.g. `invoke_subagent(Role="Skeptic", Model="pro", ...)`).
+- **For Standard Implementation & Review**:
+  Execute directly in current session (Flash) or invoke subagent with `Model: "flash"`.
+- **For Mechanical / Deterministic Work**:
+  If Tier 3 is online:
+  ```bash
+  python3 ~/.gemini/config/skills/hybrid-routing/scripts/dispatch_local.py \
+    --prompt "Format and add type annotations to this interface: ..." \
+    --max-tokens 1024
+  ```
+  If Tier 3 returns exit code `2` (worker offline), **cascade silently to Tier 2 (Gemini 3.8 Flash)**. Never fail or block user work because a local model is offline.
 
-### Step 4: Verification Gate
-Always execute the narrowest test command or syntax check (`python3 -m py_compile`, `npx tsc --noEmit`, `git diff`) before accepting local worker generated code.
+### Step 3: Narrow Verification Gate
+Never accept raw local worker code without narrow verification:
+- Python: `python3 -m py_compile <file>`
+- TypeScript: `npx tsc --noEmit`
+- JSON/YAML: `python3 -m json.tool <file>` or `yamllint`
+- Diffs: `git diff --stat`
