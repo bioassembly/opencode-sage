@@ -14,7 +14,7 @@ Annotated walkthrough of [`reference/opencode.template.json`](../../reference/op
   "npm": "@ai-sdk/openai-compatible",
   "name": "White-PC Strata",
   "options": {
-    "baseURL": "__BASE_URL__",               // e.g. http://10.4.100.102:8080/v1
+    "baseURL": "__BASE_URL__",               // substituted at install time by activate.sh
     "apiKey": "__UNSLOTH_API_KEY__"          // substituted at install time
   },
   "models": {

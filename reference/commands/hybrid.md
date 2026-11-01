@@ -19,7 +19,7 @@ Activate and display the 3-Tier Adaptive Cognitive Routing assessment:
      * Multi-file implementation, test suite authoring, refactoring
      * Working diff review (`reviewer`)
      * Active tool orchestration (Serena LSP navigation, command running)
-   - **Tier 3 (Local Worker / Deterministic):** Local LLM (llama-server / vLLM / Ollama at `http://10.4.100.102:8080/v1` or `localhost:8080`)
+   - **Tier 3 (Local Worker / Deterministic):** Local LLM via OpenCode CLI harness (`opencode run`)
      * Deterministic lint error fixes, code formatting, imports
      * Schema translations (JSON to TS/YAML/Pydantic)
      * Repetitive boilerplate scaffolding & log parsing (0 cloud tokens billed)

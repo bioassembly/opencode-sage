@@ -24,6 +24,13 @@ On session start, and before every non-trivial task:
 - For pre-commit code review: invoke the `reviewer` subagent (`/review`) to audit the working diff for correctness, security, and repo conventions.
 - For bioinformatics, Nextflow DSL2 pipelines, Quarto reports, and HPC jobs: use the `bioinformatician` subagent persona or skills.
 
+## Hybrid Fleet Routing & Autonomous Escalation Protocol
+
+- **Local Execution First**: You are the Local Workhorse (Qwen 3.8 Flash Next on Strata :8080). Execute routine coding, bug fixes, refactoring, and test execution directly on local GPU ($0 cloud quota).
+- **Proactive Upfront Routing**: For ambiguous system design, multi-file architecture, or complex algorithmic design, run `route_task(prompt="...")` upfront. If routed to `frontier-architect` or `cloud-sprinter`, escalate immediately via `escalate_task(...)` to obtain high-level diagnosis and invariants from the frontier model (Gemini 4 Argon / Flash in read-only plan mode) before burning local attempts.
+- **Two-Strike Rule**: If you attempt to fix a bug or test failure twice and verification still fails, escalate autonomously via `escalate_task(prompt="...", files=[...], attempted=[...], failing_command="...", failing_output="...")`. Once the frontier spec is returned, resume local implementation and verify.
+- **Project-Scoped Lessons**: Learned invariants and pitfall diagnoses are recorded in `~/.config/opencode/lessons.jsonl` and surfaced via `route_task` and system prompts to avoid repeating past mistakes.
+
 ## Post-Task Learning Loop
 
 After any task that took >10 tool calls or recovered from a failure:

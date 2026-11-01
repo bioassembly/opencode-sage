@@ -63,13 +63,13 @@ else
 fi
 
 # 4. Model Server Reachability
-BASE_URL="http://10.4.100.102:8080/v1"
+BASE_URL="http://127.0.0.1:8080/v1"
 API_KEY=""
 if [ -f "$CFG" ]; then
   BASE_URL="$(jq -r '.provider[]?.options.baseURL // empty' "$CFG" 2>/dev/null | head -n1)"
   API_KEY="$(jq -r '.provider[]?.options.apiKey // empty' "$CFG" 2>/dev/null | head -n1)"
 fi
-BASE_URL="${BASE_URL:-http://localhost:8080/v1}"
+BASE_URL="${BASE_URL:-http://127.0.0.1:8080/v1}"
 
 AUTH_HEADER=()
 if [ -n "$API_KEY" ]; then
@@ -81,6 +81,20 @@ if curl -s --max-time 3 "${AUTH_HEADER[@]}" "$BASE_URL/models" &>/dev/null; then
   check_pass "Model server reachable at $BASE_URL (Model: $MODEL_NAME)"
 else
   check_warn "Model server at $BASE_URL not reachable (is strata llama-server running?)"
+fi
+
+# 4b. Hybrid SAGE Integration Check
+if [ -f "$CFG" ]; then
+  if jq -e '.mcp["hybrid-sage"]' "$CFG" &>/dev/null; then
+    check_pass "hybrid-sage MCP registered in opencode.json"
+  else
+    check_warn "hybrid-sage MCP not found in opencode.json (run hybrid-sage/install-plugin.sh)"
+  fi
+  if jq -e '.plugin // [] | .[] | select(. == "hybrid-sage" or contains("hybrid-sage"))' "$CFG" &>/dev/null; then
+    check_pass "hybrid-sage plugin registered in opencode.json"
+  else
+    check_warn "hybrid-sage plugin not registered in opencode.json"
+  fi
 fi
 
 # 5. Remote MCP Server Reachability

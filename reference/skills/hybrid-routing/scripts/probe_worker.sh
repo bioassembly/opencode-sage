@@ -1,39 +1,84 @@
 #!/usr/bin/env bash
-# Probes Tier 3 local/LAN LLM inference servers (llama-server, vLLM, Ollama, Strata)
-# Returns JSON status: {"available": bool, "endpoint": string, "model": string, "latency_ms": number}
+# Probes Tier 3 local OpenCode CLI harness & its configured provider.
+# Returns JSON: {"available": bool, "harness": "opencode", "model": string, "latency_ms": number, "slot_0_busy": bool}
 set -uo pipefail
 
-CUSTOM_ENDPOINT="${LOCAL_LLM_ENDPOINT:-}"
-CONFIG_GEMINI="${HOME}/.gemini/config/hybrid-routing.json"
-CONFIG_OPENCODE="${HOME}/.config/opencode/hybrid-routing.json"
+python3 - <<'PYEOF'
+import json, os, shutil, sys, time, urllib.request
+from pathlib import Path
 
-if [ -z "$CUSTOM_ENDPOINT" ] && [ -f "$CONFIG_GEMINI" ]; then
-  CUSTOM_ENDPOINT=$(jq -r '.local_endpoint // empty' "$CONFIG_GEMINI" 2>/dev/null || true)
-fi
-if [ -z "$CUSTOM_ENDPOINT" ] && [ -f "$CONFIG_OPENCODE" ]; then
-  CUSTOM_ENDPOINT=$(jq -r '.local_endpoint // empty' "$CONFIG_OPENCODE" 2>/dev/null || true)
-fi
+t0 = time.monotonic()
+opencode_bin = shutil.which("opencode") or str(Path.home() / ".opencode" / "bin" / "opencode")
+if not (Path(opencode_bin).is_file() and os.access(opencode_bin, os.X_OK)):
+    print(json.dumps({"available": False, "harness": "opencode", "model": None, "latency_ms": None, "slot_0_busy": False}))
+    sys.exit(1)
 
-ENDPOINTS=(
-  "${CUSTOM_ENDPOINT}"
-  "http://localhost:8080/v1"
-  "http://10.4.100.102:8080/v1"
-  "http://localhost:11434/v1"
-)
+oc_cfg_path = Path.home() / ".config" / "opencode" / "opencode.json"
+if not oc_cfg_path.is_file():
+    ms = int((time.monotonic() - t0) * 1000)
+    print(json.dumps({"available": True, "harness": "opencode", "model": "opencode-default", "latency_ms": ms, "slot_0_busy": False}))
+    sys.exit(0)
 
-for ep in "${ENDPOINTS[@]}"; do
-  [ -z "$ep" ] && continue
-  START_TIME=$(date +%s%3N 2>/dev/null || python3 -c 'import time; print(int(time.time()*1000))')
-  RESPONSE=$(curl -s -f --max-time 2 "${ep}/models" 2>/dev/null || true)
-  END_TIME=$(date +%s%3N 2>/dev/null || python3 -c 'import time; print(int(time.time()*1000))')
-  
-  if [ -n "$RESPONSE" ]; then
-    MODEL_ID=$(echo "$RESPONSE" | jq -r '.data[0].id // .models[0].name // "local-worker"' 2>/dev/null || echo "local-worker")
-    LATENCY=$(( END_TIME - START_TIME ))
-    echo "{\"available\": true, \"endpoint\": \"$ep\", \"model\": \"$MODEL_ID\", \"latency_ms\": $LATENCY}"
-    exit 0
-  fi
-done
+try:
+    cfg = json.loads(oc_cfg_path.read_text(encoding="utf-8"))
+except Exception:
+    print(json.dumps({"available": False, "harness": "opencode", "model": None, "latency_ms": None, "slot_0_busy": False}))
+    sys.exit(1)
 
-echo "{\"available\": false, \"endpoint\": null, \"model\": null, \"latency_ms\": null}"
-exit 1
+model_id = cfg.get("model") or "opencode-default"
+providers = cfg.get("provider", {})
+base_url = ""
+api_key = ""
+pref = str(model_id).split("/", 1)[0] if "/" in str(model_id) else ""
+ordered = ([providers[pref]] if isinstance(providers, dict) and pref in providers else []) + (list(providers.values()) if isinstance(providers, dict) else [])
+for p in ordered:
+    if isinstance(p, dict):
+        opts = p.get("options", {})
+        burl = str(opts.get("baseURL") or "").strip()
+        if burl and burl != "__BASE_URL__":
+            base_url = burl
+            k = str(opts.get("apiKey") or "").strip()
+            if k not in ("", "__API_KEY__", "__UNSLOTH_API_KEY__"):
+                api_key = k
+            break
+
+if not base_url:
+    ms = int((time.monotonic() - t0) * 1000)
+    print(json.dumps({"available": True, "harness": "opencode", "model": model_id, "latency_ms": ms, "slot_0_busy": False}))
+    sys.exit(0)
+
+v1 = base_url.rstrip("/")
+root = v1[:-3] if v1.endswith("/v1") else v1
+headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+
+online = False
+try:
+    with urllib.request.urlopen(urllib.request.Request(f"{v1}/models", headers=headers), timeout=1.5) as r:
+        if r.status == 200:
+            online = True
+            data = json.loads(r.read().decode("utf-8")).get("data", [])
+            if data and data[0].get("id"):
+                model_id = data[0]["id"]
+except Exception:
+    try:
+        with urllib.request.urlopen(urllib.request.Request(f"{root}/health", headers=headers), timeout=1.5) as r:
+            online = r.status == 200
+    except Exception:
+        online = False
+
+if not online:
+    print(json.dumps({"available": False, "harness": "opencode", "model": model_id, "latency_ms": None, "slot_0_busy": False}))
+    sys.exit(1)
+
+slot_busy = False
+try:
+    with urllib.request.urlopen(urllib.request.Request(f"{root}/slots", headers=headers), timeout=1.0) as r:
+        slots = json.loads(r.read().decode("utf-8"))
+        if isinstance(slots, list) and slots:
+            slot_busy = bool(slots[0].get("is_processing", False))
+except Exception:
+    pass
+
+ms = int((time.monotonic() - t0) * 1000)
+print(json.dumps({"available": True, "harness": "opencode", "model": model_id, "latency_ms": ms, "slot_0_busy": slot_busy}))
+PYEOF

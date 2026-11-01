@@ -19,7 +19,7 @@ Tool-calling needs determinism (malformed JSON breaks the loop); planning benefi
 
 ## Thinking mode
 
-Strata serves one model (`qwen3.8-flash-next-iq3_s`, `reasoning: true`, `reasoning_effort: xhigh`), so all agents inherit it — no per-agent `model` overrides until the server serves more than one id. If an id isn't served, agents break silently; verify with `curl -s http://10.4.100.102:8080/v1/models` before adding any override, A/B per [evaluation.md](../evaluation.md).
+Strata serves one model (`qwen3.8-flash-next-iq3_s`, `reasoning: true`, `reasoning_effort: xhigh`), so all agents inherit it — no per-agent `model` overrides until the server serves more than one id. If an id isn't served, agents break silently; verify against your configured `/v1/models` endpoint before adding any override, A/B per [evaluation.md](../evaluation.md).
 
 ## The reviewer pattern
 

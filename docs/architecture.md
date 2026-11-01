@@ -6,7 +6,7 @@
 opencode session
   │  provider: strata (OpenAI-compatible client)
   ▼
-llama-server "White-PC Strata" — http://10.4.100.102:8080/v1
+llama-server (OpenAI-compatible local provider configured in opencode.json)
   │  (GGUF inference, KV cache, /v1 endpoints)
   ▼
 Qwen3.8-flash-next GGUF (IQ3_S) · n_ctx 262144 · served model auto-discovered via /models

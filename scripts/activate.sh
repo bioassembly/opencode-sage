@@ -36,7 +36,15 @@ fi
 if [[ -z "$BASE_URL" && -f "$DST/opencode.json" ]]; then
   BASE_URL="$(jq -r '.provider[]?.options.baseURL // empty' "$DST/opencode.json" 2>/dev/null | head -n1)"
 fi
-BASE_URL="${BASE_URL:-http://10.4.100.102:8080/v1}"
+BASE_URL="${BASE_URL:-http://127.0.0.1:8080/v1}"
+
+# Preserve existing plugin list and custom MCPs before writing new config
+PREV_PLUGINS="[]"
+PREV_HS_MCP=""
+if [[ -f "$DST/opencode.json" ]]; then
+  PREV_PLUGINS="$(jq -c '.plugin // []' "$DST/opencode.json" 2>/dev/null || echo "[]")"
+  PREV_HS_MCP="$(jq -c '.mcp["hybrid-sage"] // empty' "$DST/opencode.json" 2>/dev/null || true)"
+fi
 
 if [[ -f "$DST/opencode.json" ]]; then
   mkdir -p "$BACKUP"
@@ -65,6 +73,37 @@ jq --arg key "$KEY" --arg mem "$MEMORY_PATH" --arg url "$BASE_URL" \
         elif type == "string" and . == "__BASE_URL__" then $url
         else . end)' \
   "$SRC/opencode.template.json" > "$DST/opencode.json"
+
+# Merge preserved plugins and hybrid-sage MCP server back into opencode.json
+if [[ "$PREV_PLUGINS" != "[]" || -n "$PREV_HS_MCP" ]]; then
+  TMP="$(mktemp)"
+  python3 - "$DST/opencode.json" "$PREV_PLUGINS" "$PREV_HS_MCP" "$TMP" <<'PYEOF'
+import json, sys
+dst_path, prev_plugins_raw, prev_hs_raw, tmp_path = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+try:
+    with open(dst_path, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
+    prev_plugins = json.loads(prev_plugins_raw)
+    cfg_plugins = cfg.setdefault("plugin", [])
+    for p in prev_plugins:
+        if p not in cfg_plugins:
+            cfg_plugins.append(p)
+    if prev_hs_raw.strip():
+        prev_hs = json.loads(prev_hs_raw)
+        cfg.setdefault("mcp", {})["hybrid-sage"] = prev_hs
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+        f.write("\n")
+except Exception:
+    pass
+PYEOF
+  if [[ -s "$TMP" ]]; then
+    mv "$TMP" "$DST/opencode.json"
+    echo "[-] Preserved pre-existing plugins and hybrid-sage MCP configuration."
+  else
+    rm -f "$TMP"
+  fi
+fi
 
 # Auto-sync limits from the loaded server model; keep template values if unreadable. output=ctx: llama-server clamps generation at context window.
 CTX="$(curl -s --max-time 8 -H "Authorization: Bearer $KEY" "$BASE_URL/models" 2>/dev/null | jq -r '[.data[] | select(.loaded==true or .status.value=="loaded") | (.meta.n_ctx // .context_length) // empty] | first // empty' 2>/dev/null || true)"
@@ -97,6 +136,13 @@ done
 # Update AGENTS.md
 cp "$SRC/AGENTS.md" "$DST/AGENTS.md"
 echo "[-] Synced $DST/AGENTS.md"
+
+# Register hybrid-sage plugin and MCP if present
+HS_INSTALL="$(cd "$REPO/../hybrid-sage" 2>/dev/null && pwd)/install-plugin.sh"
+if [[ -f "$HS_INSTALL" ]]; then
+  echo "[-] Running hybrid-sage/install-plugin.sh..."
+  bash "$HS_INSTALL"
+fi
 
 jq empty "$DST/opencode.json" && echo "Config JSON valid."
 chmod 700 "$DST" 2>/dev/null || true
