@@ -34,7 +34,7 @@ Whenever assigned a broad, complex, or multi-stage task:
 Spawn subagents or task workers:
 - **Model Tiers**:
   - Frontier: For adversarial analysis, deep architecture synthesis, and high-concurrency debugging.
-  - Local Worker / Small Model: For deterministic lookups, file indexing, mechanical transformations, schema conversions via `hybrid-routing`.
+  - Local Worker / Small Model: For deterministic lookups, file indexing, mechanical transformations, and schema conversions (or escalate via `model-router` when `hybrid-sage` is connected).
 - Assign clear blocking chains and dependencies between tickets.
 
 ### 3. Swarm Coordination & Tracking

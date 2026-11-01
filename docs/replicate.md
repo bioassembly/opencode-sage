@@ -56,19 +56,15 @@ curl -fsSL https://opencode.ai/install | bash
 
 **Verify:** `opencode --version`
 
-## Stage 3 — GPU driver + power hygiene
+## Stage 3 — Optional local GPU driver setup
+
+*(Skip if connecting OpenCode to a remote OpenAI-compatible provider.)*
 
 ```bash
 sudo apt-get install -y nvidia-driver-550   # or your distro's current driver
 ```
 
-Reboot, then **verify:** `nvidia-smi` shows your GPU.
-
-Apply conservative power limits before heavy inference/training (script in this repo):
-
-```bash
-./scripts/gpu-prep.sh        # prompts for sudo; sets persistent mode + 320 W cap
-```
+Reboot, then **verify** with `nvtop` or `nvidia-smi`.
 
 ## Stage 4 — Model serving
 
@@ -115,8 +111,8 @@ If you already have a working config with a key, omit `--key` and it reuses the 
 3. **Quit and restart opencode.** Config is read only at startup.
 
 **Verify inside opencode:**
-- MCP tools appear (context7, sequential-thinking, playwright, fetch, memory)
-- `/gpu` command runs and reports VRAM + server PIDs
+- MCP tools appear (context7, deepwiki, sequential-thinking, playwright, fetch, memory)
+- `/doctor` command runs and reports harness health
 - Ask the agent to review a file → reviewer subagent triggers read-only
 
 ## Stage 7 — Post-install tuning

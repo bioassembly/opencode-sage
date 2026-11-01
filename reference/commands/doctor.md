@@ -5,10 +5,8 @@ agent: build
 
 Run this harness health check:
 
-1. Execute the doctor script:
-   `bash ~/opencode-sage/scripts/doctor.sh`
-2. Also check if the live model context limit matches:
-   Compare `limit.context` in `~/.config/opencode/opencode.json` against the server's real context if reachable.
-3. Report the result table concisely with PASS/FAIL rows and a single overall verdict.
+1. Execute the doctor script (`~/.local/bin/opencode-doctor` installed by `activate.sh`):
+   `opencode-doctor 2>/dev/null || bash ~/.local/bin/opencode-doctor`
+2. Report the result concisely with PASS/INFO/WARN/FAIL rows and a single overall verdict.
 
 CRITICAL: report only. Do not fix, prune, or restart anything yourself unless asked.

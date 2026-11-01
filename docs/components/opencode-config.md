@@ -1,25 +1,25 @@
 # opencode Config Reference
 
-Annotated walkthrough of [`reference/opencode.template.json`](../../reference/opencode.template.json). Tuned for **local 27B-class models on 24 GB VRAM (RTX 3090)**.
+Annotated walkthrough of [`reference/opencode.template.json`](../../reference/opencode.template.json). Compatible with any local or remote OpenAI-compatible endpoint (`llama-server`, `ollama`, `vllm`, or cloud APIs).
 
 ## Model & Provider
 
 ```jsonc
 "model": "strata/qwen3.8-flash-next-iq3_s",        // primary agent model
-"small_model": "strata/qwen3.8-flash-next-iq3_s",  // auxiliary calls -> same local endpoint
+"small_model": "strata/qwen3.8-flash-next-iq3_s",  // auxiliary calls -> same endpoint
 ```
 
 ```jsonc
 "provider.strata": {
   "npm": "@ai-sdk/openai-compatible",
-  "name": "White-PC Strata",
+  "name": "Local OpenAI-Compatible Provider",
   "options": {
     "baseURL": "__BASE_URL__",               // substituted at install time by activate.sh
     "apiKey": "__UNSLOTH_API_KEY__"          // substituted at install time
   },
   "models": {
     "qwen3.8-flash-next-iq3_s": {
-      "name": "White-PC Strata (IQ3_S)",
+      "name": "Configured Local Model",
       "tool_call": true,
       "temperature": true,
       "reasoning": true,

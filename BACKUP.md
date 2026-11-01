@@ -11,7 +11,7 @@ Every run of `activate.sh` snapshots whatever it is about to overwrite into a ti
 ├── opencode.json      ← the previous global config (contains your API key)
 ├── AGENTS.md          ← previous global agent protocol (if one existed)
 ├── agent/             ← previous subagents (reviewer, bioinformatician, skeptic…)
-├── command/           ← previous slash commands (/gpu, /doctor, /review…)
+├── command/           ← previous slash commands (/grill-me, /doctor, /review…)
 └── skills/            ← previous skills
 ```
 

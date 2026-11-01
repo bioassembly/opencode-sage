@@ -5,12 +5,18 @@ set -uo pipefail
 echo "=== opencode-sage Harness Health Check (Doctor) ==="
 
 check_pass() { echo -e "[\033[32mPASS\033[0m] $1"; }
+check_info() { echo -e "[\033[36mINFO\033[0m] $1"; }
 check_warn() { echo -e "[\033[33mWARN\033[0m] $1"; }
 check_fail() { echo -e "[\033[31mFAIL\033[0m] $1"; }
 
 CFG="$HOME/.config/opencode/opencode.json"
-
-REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+REPO="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
 # Prune backups if requested
 if [ "${1:-}" = "--prune-backups" ]; then
@@ -46,6 +52,12 @@ else
   check_fail "uvx not found (required for fetch / python MCPs)"
 fi
 
+if command -v rea &>/dev/null || [ -x "$HOME/.local/bin/rea" ]; then
+  check_pass "rea CLI installed (zero-overhead autonomous binary inspection ready)"
+else
+  check_info "rea CLI not globally installed (falls back to npx -y rea-agents@6.4.0)"
+fi
+
 # 3. Config validation & permissions
 if [ -f "$CFG" ]; then
   if jq empty "$CFG" &>/dev/null; then
@@ -62,7 +74,7 @@ else
   check_fail "opencode.json not found at $CFG"
 fi
 
-# 4. Model Server Reachability
+# 4. Configured Model Provider Reachability (Optional for offline/unstarted local servers)
 BASE_URL="http://127.0.0.1:8080/v1"
 API_KEY=""
 if [ -f "$CFG" ]; then
@@ -76,24 +88,19 @@ if [ -n "$API_KEY" ]; then
   AUTH_HEADER=(-H "Authorization: Bearer $API_KEY")
 fi
 
-if curl -s --max-time 3 "${AUTH_HEADER[@]}" "$BASE_URL/models" &>/dev/null; then
+if curl -s -f --max-time 3 "${AUTH_HEADER[@]}" "$BASE_URL/models" &>/dev/null; then
   MODEL_NAME=$(curl -s --max-time 3 "${AUTH_HEADER[@]}" "$BASE_URL/models" | jq -r '.data[0].id // "active"' 2>/dev/null)
-  check_pass "Model server reachable at $BASE_URL (Model: $MODEL_NAME)"
+  check_pass "Model provider reachable at $BASE_URL (Model: $MODEL_NAME)"
 else
-  check_warn "Model server at $BASE_URL not reachable (is strata llama-server running?)"
+  check_info "Model provider at $BASE_URL not currently running (start your OpenAI-compatible server or set --base-url)"
 fi
 
-# 4b. Hybrid SAGE Integration Check
+# 4b. Optional Hybrid SAGE Integration Check
 if [ -f "$CFG" ]; then
   if jq -e '.mcp["hybrid-sage"]' "$CFG" &>/dev/null; then
-    check_pass "hybrid-sage MCP registered in opencode.json"
+    check_pass "hybrid-sage MCP & plugin registered in opencode.json"
   else
-    check_warn "hybrid-sage MCP not found in opencode.json (run hybrid-sage/install-plugin.sh)"
-  fi
-  if jq -e '.plugin // [] | .[] | select(. == "hybrid-sage" or contains("hybrid-sage"))' "$CFG" &>/dev/null; then
-    check_pass "hybrid-sage plugin registered in opencode.json"
-  else
-    check_warn "hybrid-sage plugin not registered in opencode.json"
+    check_info "hybrid-sage plugin not installed (standalone OpenCode mode)"
   fi
 fi
 
@@ -118,17 +125,23 @@ else
   check_warn "Found only $LSP_COUNT LSP binaries in ~/.local/bin (run scripts/install-lsps.sh)"
 fi
 
-# 7. Skills count
+# 7. Skills count (accounting for optional gitignored skills.local/ + hybrid-sage model-router symlink)
 SKILLS_DIR="$HOME/.config/opencode/skills"
 REF_SKILLS_DIR="$REPO/reference/skills"
+LOCAL_SKILLS_DIR="$REPO/reference/skills.local"
 if [ -d "$SKILLS_DIR" ]; then
-  SKILLS_COUNT=$(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
+  SKILLS_COUNT=$(find -L "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
   if [ -d "$REF_SKILLS_DIR" ]; then
     REF_SKILLS_COUNT=$(find "$REF_SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    if [ "$SKILLS_COUNT" -eq "$REF_SKILLS_COUNT" ]; then
+    LOCAL_SKILLS_COUNT=0
+    [ -d "$LOCAL_SKILLS_DIR" ] && LOCAL_SKILLS_COUNT=$(find -L "$LOCAL_SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
+    EXTRA_PLUGIN=0
+    [ -L "$SKILLS_DIR/model-router" ] && EXTRA_PLUGIN=1
+    EXPECTED=$((REF_SKILLS_COUNT + LOCAL_SKILLS_COUNT + EXTRA_PLUGIN))
+    if [ "$SKILLS_COUNT" -eq "$EXPECTED" ]; then
       check_pass "Active skills installed: $SKILLS_COUNT skills in $SKILLS_DIR (synced with reference)"
     else
-      check_warn "Active skills count ($SKILLS_COUNT) differs from reference ($REF_SKILLS_COUNT). Run scripts/activate.sh to sync."
+      check_warn "Active skills count ($SKILLS_COUNT) differs from expected ($EXPECTED). Run scripts/activate.sh to sync."
     fi
   else
     check_pass "Active skills installed: $SKILLS_COUNT skills in $SKILLS_DIR"
@@ -157,7 +170,15 @@ else
   check_warn "Agent directory not found at $AGENTS_DIR"
 fi
 
-# 9. Backup Hygiene
+# 9. Lean MCP Footprint & Backup Hygiene
+if [ -f "$CFG" ]; then
+  if jq -e '.mcp["rea"]' "$CFG" &>/dev/null; then
+    check_warn "REA MCP active (170 tools / ~67.6k schema tokens per turn; re-run activate.sh without --with-rea to use zero-overhead rea CLI)"
+  else
+    check_pass "Lean MCP footprint active (REA 170-tool MCP omitted, saving ~67.6k tokens/turn; rea CLI ready)"
+  fi
+fi
+
 BACKUPS=$(find "$HOME/.config/opencode" -maxdepth 1 -type d -name "backup-*" 2>/dev/null | wc -l)
 if [ "$BACKUPS" -le 5 ]; then
   check_pass "Backup hygiene good ($BACKUPS backups found)"

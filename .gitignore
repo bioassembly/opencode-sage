@@ -86,5 +86,7 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 
-# Local-only registries (internal client/report provenance — never publish)
+# Local-only machine skills & registries (internal client/report provenance — never publish)
+skills.local/
+reference/skills.local/
 **/REGISTRY.local.md

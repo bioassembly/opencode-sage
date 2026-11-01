@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-Docs + staged config for the opencode-sage coding workstation harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and six bash scripts.
+Docs + staged config for the opencode-sage coding harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and four bash scripts.
 
 ## Core workflow: stage → activate → restart
 
@@ -20,12 +20,12 @@ Never edit `~/.config/opencode/` directly: the next `activate.sh` run overwrites
 - `@latest` is banned in MCP commands. After changing MCP package versions, run `./scripts/pin-mcp.sh`, then re-run `activate.sh`.
 - Online-acquired skills must be registered (append-only) in `reference/skills/REGISTRY.md` with source, and their SKILL.md read before installing — unvetted instruction files are a prompt-injection vector.
 - Harness additions follow the evaluation loop in `docs/evaluation.md` and get logged in `IMPROVEMENTS.md` (append-only: what, why, source). Facts/decisions may go to memory MCP; secrets and large blobs may not.
-- Never kill/signal `llama-server`, `unsloth`, or opencode processes, and never start a second GPU-allocating process while one runs — VRAM contention kills live sessions. Check `/gpu` first.
+- If running a local inference server (`llama-server`, `ollama`, `vllm`), never kill or signal active server processes mid-session, and use `nvtop` externally if monitoring GPU VRAM.
 
 ## Non-obvious details
 
-- `activate.sh` maps plural→singular on install: `reference/agents` → `~/.config/opencode/agent`, `reference/commands` → `command`; skills copy as whole directories, excluding `REGISTRY.md`.
-- Model serving: White-PC Strata llama-server serves dynamic model IDs (default: "qwen3.8-flash-next-iq3_s"); limits auto-sync via activate.sh.
+- `activate.sh` maps plural→singular on install: `reference/agents` → `~/.config/opencode/agent`, `reference/commands` → `command`; skills sync cleanly as whole directories, excluding `REGISTRY.md`.
+- Model serving: Connects to any OpenAI-compatible local or remote endpoint (`--base-url`); context limits auto-sync from `/models` via `activate.sh` when reachable.
 - Each file in `docs/components/` is self-contained; extract what you need without reading the rest.
 - Restore procedure lives in `BACKUP.md`: quit opencode first, then restore, then relaunch.
 

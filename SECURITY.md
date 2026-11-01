@@ -18,9 +18,9 @@ chmod 600 ~/.config/opencode/opencode.json   # contains the key
 
 Backup dirs (`~/.config/opencode/backup-*`) contain copies of the keyed config — prune them periodically and never commit them.
 
-## GPU process safety
+## Local inference process safety (when running a local GPU server)
 
-VRAM contention doesn't just fail — it can kill your live session's server mid-write. This deployment runs exactly one model process (via Unsloth Studio). Never start a second GPU-allocating process while it's up, and never kill or signal `llama-server`, `unsloth`, or opencode processes. Check `/gpu` first; if VRAM > 90%, wait.
+If serving a local GGUF model on a GPU, VRAM contention can terminate your active server mid-write. Run one inference server process per GPU, monitor externally via `nvtop`, and avoid killing or signaling active `llama-server` or `opencode` processes mid-session.
 
 ## Supply chain
 

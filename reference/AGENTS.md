@@ -7,15 +7,15 @@ On session start, and before every non-trivial task:
 1. Check available skills; load the one matching the task and follow its runbook.
 2. For new features or bug fixes, always follow `test-driven-development` (write failing test first).
 3. For complex multi-file plans, invoke `using-git-worktrees` to ensure workspace isolation.
-4. No match → flag `[SKILL GAP: <topic>]`, then run the self-improvement loop below immediately — never ask permission first.
+4. **Autonomous Binary & Opaque Artifact Exploration**: While exploring a codebase or directory, keep LSP tools for readable source files, and **automatically** load `reverse-engineer-anything` (`rea` CLI: `rea inspect-artifact`, `rea analyze-javascript-application`, `rea inspect-binary-layout`, etc.) whenever you encounter compiled binaries, `.so`/`.dll`/`.dylib` libraries, `.apk`/`.asar` packages, `.wasm`/`.pyc`/`.jar` bytecode, firmware, or minified JS bundles without source — never wait for the user to ask for `rea`.
+5. No matching skill → flag `[SKILL GAP: <topic>]`, then run the self-improvement loop below immediately — never ask permission first.
 
 ## Self-Improvement & Continuous Learning
 
 1. **Vetting ladder**: Official docs (`docs.<tool>.io/llms.txt` first), canonical repo READMEs, curated collections (`obra/superpowers`, `K-Dense-AI/scientific-agent-skills`, `anthropics/skills`).
 2. **Quality bar**: ≥1,000 stars (≥100 for niche bioinformatics); pushed within 12 months; zero malicious patterns; concise YAML frontmatter with actionable description.
 3. **Write** a `SKILL.md` into the skills directory: name matches its folder exactly, description carries trigger keywords (<120 chars), under 80 lines, every line changes behavior.
-4. **Register**: Add the skill to `reference/skills/REGISTRY.md` and announce `[SKILL ADDED: <name>]`.
-5. No source for the target (binary, APK, firmware, built app)? Load `reverse-engineer-anything`; source-level work stays on LSP/Serena-class tools.
+4. **Register**: Add provenance to `reference/skills/REGISTRY.md` (or keep machine-private skills in gitignored `reference/skills.local/`) and announce `[SKILL ADDED: <name>]`.
 
 ## Multi-Agent & Subagent Guidelines
 
@@ -24,12 +24,13 @@ On session start, and before every non-trivial task:
 - For pre-commit code review: invoke the `reviewer` subagent (`/review`) to audit the working diff for correctness, security, and repo conventions.
 - For bioinformatics, Nextflow DSL2 pipelines, Quarto reports, and HPC jobs: use the `bioinformatician` subagent persona or skills.
 
-## Hybrid Fleet Routing & Autonomous Escalation Protocol
+## Optional Hybrid Fleet Routing (`hybrid-sage`)
 
-- **Local Execution First**: You are the Local Workhorse (Qwen 3.8 Flash Next on Strata :8080). Execute routine coding, bug fixes, refactoring, and test execution directly on local GPU ($0 cloud quota).
-- **Proactive Upfront Routing**: For ambiguous system design, multi-file architecture, or complex algorithmic design, run `route_task(prompt="...")` upfront. If routed to `frontier-architect` or `cloud-sprinter`, escalate immediately via `escalate_task(...)` to obtain high-level diagnosis and invariants from the frontier model (Gemini 4 Argon / Flash in read-only plan mode) before burning local attempts.
-- **Two-Strike Rule**: If you attempt to fix a bug or test failure twice and verification still fails, escalate autonomously via `escalate_task(prompt="...", files=[...], attempted=[...], failing_command="...", failing_output="...")`. Once the frontier spec is returned, resume local implementation and verify.
-- **Project-Scoped Lessons**: Learned invariants and pitfall diagnoses are recorded in `~/.config/opencode/lessons.jsonl` and surfaced via `route_task` and system prompts to avoid repeating past mistakes.
+When the `hybrid-sage` plugin/MCP is connected:
+- **Direct Execution First**: Execute routine coding, bug fixes, refactoring, and test execution directly in OpenCode (never call `delegate_local` on yourself).
+- **Proactive Upfront Routing**: For ambiguous greenfield system design or complex algorithmic trade-offs, run `route_task(prompt="...")` upfront. If routed to `frontier-architect` or `cloud-sprinter`, escalate via `escalate_task(...)` to obtain read-only diagnosis and invariants from Antigravity (`agy --mode plan`).
+- **Two-Strike Rule**: After 2 failed fix attempts on the same bug or test failure, call `escalate_task(prompt="...", files=[...], attempted=[...], failing_command="...", failing_output="...")`, then implement and verify the returned spec locally.
+- **Project-Scoped Lessons**: Reusable root-cause invariants are persisted in `~/.config/opencode/lessons.jsonl` and surfaced automatically on matching repositories.
 
 ## Post-Task Learning Loop
 
@@ -44,5 +45,5 @@ After any task that took >10 tool calls or recovered from a failure:
 - **Tight responses**: Direct, concise, technical. No padding, no unsolicited preamble or postamble.
 - **Minimal diffs**: No drive-by reformatting, no unsolicited renames. Suggest cosmetic cleanups separately.
 - **Verify before claiming done**: Run the narrowest test or command that can fail and cite executed evidence. No evidence, no "done".
-- **Genomics & Python stack**: Python packages outside conda use `--break-system-packages`. Nextflow pipelines follow nf-core conventions with stub tests (`-stub-run`) before real data.
+- **Genomics & Python stack**: Prioritize `conda install -c bioconda -c conda-forge` for compiled bioinformatics tools; Python packages outside conda use `--break-system-packages`. Nextflow pipelines follow nf-core conventions with stub tests (`-stub-run`) before real data.
 - **Durable memory**: Persist important architectural decisions, conventions, and user preferences to the `memory` MCP server. Never store credentials or API keys.

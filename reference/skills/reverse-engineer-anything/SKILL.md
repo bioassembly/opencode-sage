@@ -1,51 +1,50 @@
 ---
 name: reverse-engineer-anything
-description: "Reverse-engineer binaries, APKs, firmware, Electron, WASM/EVM via REA. Use for no-source targets: decompile, analyze."
+description: Autonomously inspect and reverse-engineer opaque or compiled artifacts encountered during codebase exploration — native binaries (ELF/PE/Mach-O, .so/.dll/.dylib), APKs, firmware, Electron/ASAR, minified JS bundles, .NET/JVM/Python/WASM/EVM bytecode — via the zero-overhead `rea` CLI without manual user invocation.
 ---
 
-# Reverse-Engineer Anything (REA)
+# Reverse-Engineer Anything (Autonomous On-Demand CLI)
 
-Use when the claim depends on a shipped artifact, not on available source:
-a native binary, shared library, APK, firmware image, Electron/ASAR bundle,
-WASM/EVM bytecode, or "how does this app's feature work" with no repo.
+## Autonomous Trigger Boundary (Source vs. Opaque Artifact)
 
-## Do NOT use when
+When exploring **any** codebase, directory, or release bundle, choose tools automatically — **never wait for the user to ask for `rea`**:
 
-- Source is available → normal repo tools + Serena LSP, never REA.
-- Web-app vulnerability audit → `security-audit`.
-- Library/API docs question → Context7 / DeepWiki.
-- Ordinary source-architecture analysis → say so, skip REA readiness checks.
+- **Readable source exists** (`.py`, `.ts`, `.js`, `.rs`, `.go`, `.c`, `.cpp`, `.java`, `.nf`, etc.) → Use **LSP** + `grep` + sliced file reads. Never waste REA calls on source code.
+- **No readable source for a component** (compiled binary, proprietary `.so`/`.dll`/`.dylib` extension, `.apk`/`.aab`/`.ipa`, Electron `app.asar`, minified/webpacked `dist/*.js` with no `src/`, `.wasm`, `.pyc`, `.jar`/`.class`, `.NET` DLL, EVM bytecode, or firmware `.bin`/`.img`) → **Automatically activate this protocol** and inspect via the `rea` CLI (`~/.local/bin/rea`, fallback `npx -y rea-agents@6.4.0`).
 
-## Readiness on this machine
+Running `rea` via CLI keeps **0 standing MCP schema tokens** on normal turns while giving full on-demand access to all 140+ REA analysis commands the instant an opaque artifact appears.
 
-No native providers installed (no Ghidra/Hopper/IDA). What works now,
-with zero extra installs:
+## Fast On-Demand CLI Ladder (Cheapest First)
 
-- JS/Electron trees: `analyze_javascript_application` (CLI fallback:
-  `npx -y rea-agents@6.4.0 analyze-javascript-application <abs-path> --json`)
-- .NET assembly metadata/CIL: `inspect_managed_artifact`
-- ELF layout/symbols/relocations (offline, needs pwntools): `inspect_binary_layout`
-- PE resources/icons: `inspect_pe_resources`
+Set `REA="rea"` (or `REA="npx -y rea-agents@6.4.0"` if `rea` is not in `PATH`):
 
-Native decompilation (`open_binary` → pseudocode) needs Ghidra. If asked:
-say Ghidra is missing and stop — do not fake pseudocode from strings.
+1. **Universal Triage (1st call on any unknown binary/bundle)**:
+   ```bash
+   file <path>
+   $REA inspect-artifact <abs-path>
+   ```
+   Returns artifact format, architecture, observations, and exact recommended next probes.
 
-## Routing (first tool by target)
+2. **Target-Specific Static Reconstruction**:
+   - **Minified JS / Web / Electron / ASAR app**:
+     `$REA analyze-javascript-application <abs-path>` (or `$REA inspect-electron-page <abs-path>`)
+   - **Native ELF / PE / Mach-O / `.so` / `.dll` layout, imports & symbols**:
+     `$REA inspect-binary-layout <abs-path>` (pair with `nm -DC <path>`, `readelf -Ws <path>`, or `objdump -d -M intel <path>` for targeted symbol disassembly)
+   - **Android APK / AAB**:
+     `$REA inspect-android-package <abs-path>` → `$REA inspect-android-class <abs-path> <class>` → `$REA inspect-android-method <abs-path> <class> <method>`
+   - **.NET / Managed CLI assembly**:
+     `$REA inspect-managed-artifact <abs-path>`
+   - **Firmware image**:
+     `$REA extract-firmware <abs-path>`
+   - **WASM / EVM bytecode**:
+     `$REA inspect-evm-interface <bytecode>` or `wasm2wat` / `$REA analyze <abs-path>`
+   - **Full function / module decompilation** (when Ghidra/JEB provider is configured via `GHIDRA_INSTALL_DIR`):
+     `$REA decompile <abs-path> ...` / `$REA function <abs-path> ...`
+     *(If no native decompiler backend is installed on the host, combine `$REA inspect-binary-layout` + `objdump -d` / symbol imports and state clearly that Ghidra pseudocode is unavailable — never fabricate C pseudocode from strings.)*
 
-Binary/lib/database → `open_binary`, then focused tools, `close_binary` at end.
-APK code/classes → `inspect_android_package`. Firmware → `inspect_firmware_regions`.
-Large/unknown-size target → `"detail": "summary"` first, then page via the
-returned Evidence ID (`inspect_analysis_view`); never re-run an identical call.
+3. **Token-Safe Output Scoping**:
+   - Pipe large JSON outputs to `/tmp/rea-evidence.json` and query specific fields with `jq`, or project views with `$REA inspect-analysis-view` — never dump megabytes of raw disassembly into chat context.
 
-## Evidence contract
-
-Every conclusion separates **observations / inferences / unknowns**, cites
-Evidence IDs, keeps coverage limits. Static analysis never observed execution —
-never claim runtime behavior from static output.
-
-## Safety
-
-Runtime-capture tools EXECUTE the target with user permissions. Analyze local
-copies of user-owned targets only; untrusted binaries go nowhere near this
-workflow without an isolated sandbox. Never broaden target or action beyond
-the declared request. Findings with missing coverage are partial, say so.
+## Evidence & Safety Contract
+- Separate **verified static observations** (imports, exports, strings, control-flow, byte offsets) from **inferences** and **unknowns**.
+- **Static First**: Use static `inspect-*` / `analyze-*` commands by default. Never execute untrusted binaries (`capture-process` / runtime scenarios) without explicit user approval and sandboxing.

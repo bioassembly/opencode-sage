@@ -1,74 +1,50 @@
 ---
 name: security-audit
-description: Audit a PHP/CodeIgniter 4 web app for OWASP Top-10 vulnerabilities (SQLi, XSS, CSRF, IDOR, session, upload, secrets). Use when asked to assess security vulnerabilities, do a security review, or harden a web app.
+description: Audit web applications, backends, and APIs for OWASP Top-10 vulnerabilities (broken access control, injection, XSS, CSRF, SSRF, auth/session flaws, unsafe uploads, leaked secrets). Use when asked to perform a security review, find vulnerabilities, or harden an application.
 ---
 
-## What I do
-- Systematically audit a PHP web app (esp. CodeIgniter 4) for OWASP Top-10 2025 classes
-- Distinguish live-reproducible findings from code-read findings; assign severity
-- Produce findings in the repo's existing BUGS.txt GitHub-issue format
-- Cross-reference against existing BUGS.txt so only UNIQUE findings are added
+# Web & API Security Audit (OWASP Top-10)
 
-## OWASP Top 10 2025 checklist (audit order)
-- A01 Broken Access Control — IDOR, missing role/ownership checks, mass assignment
-- A02 Security Misconfiguration — debug on, default creds, verbose errors, CORS *, missing headers
-- A03 Software Supply Chain — unpinned/known-vuln deps, untrusted vendor code
-- A04 Cryptographic Failures — hardcoded keys, weak hashes (md5/sha1), plaintext secrets, no HTTPS enforcement
-- A05 Injection — SQLi (raw concat, orderBy/like on user input), command injection, XSS (reflected+stored), LDAP, path traversal
-- A06 Insecure Design — missing rate limit, no business-logic validation, trust in client state
-- A07 Identification & Auth Failures — weak login, no lockout, session fixation, missing MFA, OAuth state/nonce
-- A08 Software & Data Integrity Failures — unsafe deserialization, CI/CD integrity, backup restore trust
-- A09 Security Logging & Monitoring — no audit trail, no alerting on auth failures
-- A10 Sensitive Data Exposure — PII/secrets in logs, dumps, git history, API responses
+## Scope & Deliverable Contract
+- Trace **tainted source -> transformation -> unsafe sink** before reporting any issue; never report unverified grep noise as a vulnerability.
+- Distinguish `[LIVE]` (reproduced against a running endpoint/test) from `[CODE]` (verified via static data-flow trace).
+- Report severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`), `CWE`, `OWASP Top-10` category, exact `file:line`, exploit scenario, and minimal remediation diff.
 
-## PHP / CodeIgniter 4 specific patterns to grep
+## OWASP Top-10 Audit Order
+1. **A01 Broken Access Control**: IDOR (missing object-level ownership check), privilege escalation, mass assignment / unvalidated schema fields, path traversal (`../` / symlink escape).
+2. **A02 Security Misconfiguration**: Debug mode in production, permissive CORS (`Access-Control-Allow-Origin: *` with credentials), missing security headers (`CSP`, `HSTS`, `X-Content-Type-Options`, `X-Frame-Options`), exposed admin/metrics routes.
+3. **A03 Supply Chain & Dependencies**: Known vulnerable packages, unpinned runtime dependencies, untrusted build/install hooks.
+4. **A04 Cryptographic Failures**: Hardcoded API keys/JWT secrets, weak password or token hashing (`MD5`/`SHA1`), non-constant-time token comparison, predictable RNG (`random` instead of `secrets`/`crypto`).
+5. **A05 Injection & Cross-Site Scripting (XSS)**:
+   - SQL/NoSQL injection (string interpolation in queries, unallowlisted `ORDER BY` columns).
+   - OS command injection (`shell=True`, `child_process.exec`, `system()`/`popen()` on user input).
+   - Reflected/Stored/DOM XSS (`innerHTML`, `dangerouslySetInnerHTML`, `v-html`, `set:html`, unescaped template output).
+6. **A06 Insecure Design**: Missing rate limits on auth/expensive endpoints, race conditions (TOCTOU on balances/quotas/files), trusting client-side price/role fields.
+7. **A07 Identification & Authentication**: Session fixation, missing `HttpOnly`/`Secure`/`SameSite` cookie attributes, JWT `alg: none` or missing audience/expiry validation, OAuth missing `state`/PKCE.
+8. **A08 Software & Data Integrity**: Unsafe deserialization (`pickle.loads`, `yaml.load` without `SafeLoader`, `unserialize`, `eval`/`Function`), unsigned webhook payloads.
+9. **A09 Logging & Monitoring**: Secrets/PII logged in plaintext, missing audit events on auth/privilege failures, stack traces leaked in HTTP responses.
+10. **A10 SSRF & Outbound Request Forgery**: User-controlled URLs passed to `fetch`/`requests`/`httpx`/`urllib`/`curl` without scheme/host allowlisting and private-network blocking.
+
+## Multi-Stack Taint Discovery Patterns
 ```bash
-# SQLi: raw query / string-built SQL / orderBy+like on request input
-rg -n "query\(|->select\(|->where\(|orderBy|like\(" app/ | grep -i "request\|get\|post\|\$"
-# XSS: unescaped echo of request/DB data in views
-rg -n "<=\s*\$[a-zA-Z_]" app/**/Views/ | grep -v "esc("
-# Command injection
-rg -n "exec\(|shell_exec\|system\(|passthru\|popen\|proc_open\|`\$" app/
-# Unsafe deserialization
-rg -n "unserialize\(" app/
-# Weak crypto / hardcoded secrets
-rg -ni "md5\(|sha1\(|password_hash|AES|openssl|iv|key\s*=" app/
-# Path traversal in file ops
-rg -n "file_get_contents|fopen|readfile|move_uploaded_file|unlink|include|require" app/ | grep -i "\$"
-# Mass assignment / raw request to model
-rg -n "save\(|insert\(|update\(" app/ | grep -i "request\|->getPost\|->getVar"
-# Session: fixation, missing regenerate, cookie flags
-rg -n "regenerate|setTempdata|session\(\)->set|cookieHTTPOnly|cookieSecure|cookieSamesite" app/
+# Command execution & unsafe eval/deserialization (Python / JS / PHP / Go)
+rg -n "subprocess\.(run|Popen|call).*shell\s*=\s*True|os\.system\(|child_process\.(exec|execSync)\(|pickle\.loads\(|yaml\.load\(|unserialize\(|eval\(" .
+
+# Raw SQL string interpolation
+rg -n "(execute|query|raw)\s*\(\s*(f[\"']|[\"'`].*\$\{|[\"'].*%s|[\"'].*\.\s*\$)" .
+
+# DOM / Template XSS sinks
+rg -n "dangerouslySetInnerHTML|innerHTML\s*=|v-html|set:html|\|\s*safe\b" .
+
+# Hardcoded secrets, private keys, and weak hashes
+rg -n "BEGIN (RSA|OPENSSH|EC|PRIVATE) KEY|api[_-]?key\s*[:=]\s*[\"'][A-Za-z0-9_\-]{16,}|md5\(|sha1\(" .
+
+# File upload, path join, and outbound URL (SSRF) sinks
+rg -n "send_file|FileResponse|move_uploaded_file|extractall\(|requests\.(get|post)|httpx\.(get|post)|urllib\.request\.urlopen" .
 ```
 
-## CodeIgniter 4 hardening checklist
-- CSRF: `$csrfProtection` on; use session-based (not cookie) for stricter; `$tokenRandomize = true`; csrf filter in global Filters; verify token on ALL state-changing POSTs (not just some)
-- Escaping: every dynamic `<?= $var ?>` in views wrapped in `esc($var)`; `esc()` default is HTML — use `esc($x, 'js')`/`'attr'` where needed
-- Input: `$request->validate()` with rules on every controller method that mutates data; never trust client-supplied IDs/roles
-- Auth: session `regenerate(true)` on login/privilege change; set `cookieHTTPOnly=true`, `cookieSecure=true`, `cookieSamesite=Lax`; store minimal session data; use a real session driver (DB/Redis) not files in prod
-- Files: use `Services::uploader` with `allowedFileTypes`, `maxSize`, `randomName`/`detectMimeType`; never use raw uploaded filename; store outside webroot or block script execution
-- Secrets: no hardcoded keys in source; load from env; rotate any committed secret; `.env`/`env` in .gitignore AND untracked
-- DB: use query builder / bindings (`$db->query($sql, [$params])`) — never string-interpolate values; allow-list column names for orderBy/sort
-- Errors: `$app->showErrorDetails`/CI_ENVIRONMENT=production off in prod; no stack traces to client
-- Headers: add CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Strict-Transport-Security
-- Rate limit: throttle login + sensitive POSTs (CI4 has no built-in; use Throttler or middleware)
-
-## Severity assignment
-- CRITICAL: remote code exec, full DB compromise, auth bypass, live secret exposed
-- HIGH: stored XSS, IDOR on sensitive data, SQLi requiring auth, session fixation, business-logic bypass
-- MEDIUM: reflected XSS, CSRF on low-impact action, missing validation, info disclosure, weak crypto on non-critical data
-- LOW: missing hardening header, latent/defense-in-depth, code smell with no current exploit
-- DEV-STAGE: acceptable in dev, must fix before prod (default creds, no CI, no rate limit)
-
-## Process
-1. Read repo AGENTS.md + existing BUGS.txt to know what's ALREADY found
-2. Run the grep patterns above; triage each hit by reading surrounding code
-3. For each candidate: confirm the data flow (tainted source -> unsafe sink, no sanitization)
-4. Mark [LIVE] if reproducible against running app, else [CODE]
-5. Only ADD findings not already in BUGS.txt; reuse existing IDs/sections, append new ones
-6. Assign severity per rubric; note CWE + OWASP category
-
-## When to use me
-- "Assess the security vulnerabilities", "do a security audit/review", "find security bugs", "harden this app"
-- Before production release of a PHP/CI4 web app
-- When a new feature adds input handling, auth, file upload, or DB queries
+## Severity Rubric
+- **CRITICAL**: Unauthenticated RCE, SQLi/auth bypass, arbitrary file write/read of secrets, committed live production credentials.
+- **HIGH**: Stored XSS, authenticated SQLi/SSRF, IDOR exposing private user/clinical records, CSRF on account-takeover/state-critical actions.
+- **MEDIUM**: Reflected XSS, missing rate limiting on auth/compute-heavy endpoints, resource exhaustion / zip-bomb / unbounded upload size.
+- **LOW**: Missing defense-in-depth headers, verbose non-secret error messages, dev-only misconfigurations.

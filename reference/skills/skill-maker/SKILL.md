@@ -36,10 +36,10 @@ Core principle: a skill is documentation that must survive contact with a pressu
 - RED: run the target scenario WITHOUT the skill (subagent or fresh session); capture verbatim rationalizations and which pressures triggered them.
 - GREEN: write the minimal skill addressing ONLY observed failures — nothing hypothetical.
 - REFACTOR: re-run; close each loophole explicitly (state consequence + enumerate forbidden workarounds); accumulate a rationalization table and red-flags list; escalate wording when missed (`always` → `MUST`).
-- Ship gate: ≥3 scenarios pass end-to-end on the actual target model — local 27B needs more scaffolding than frontier models, so test there.
+- Ship gate: ≥3 scenarios pass end-to-end on the actual target model — smaller/local models need tighter scaffolding than frontier models, so test on the target runtime.
 
 ### Install + provenance
-Write to `reference/skills/<lowercase-hyphen-name>/SKILL.md`, mirror to `sage-cookbook/reference/skills/`, append `~/opencode-sage/reference/skills/REGISTRY.md` (source + stars), run `~/opencode-sage/scripts/activate.sh`, print `[SKILL ADDED: <name>]`.
+Write to `<opencode-sage-repo>/reference/skills/<lowercase-hyphen-name>/SKILL.md`, append provenance to `<opencode-sage-repo>/reference/skills/REGISTRY.md` (source + stars), run `<opencode-sage-repo>/scripts/activate.sh`, and print `[SKILL ADDED: <name>]`.
 
 ## When to use me
 "Make a skill" requests · skill improvement/review · skill-vs-best-practice comparison · adjudicating create-vs-configure decisions.

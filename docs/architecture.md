@@ -46,9 +46,9 @@ Uncapped tool dumps silently eat the window until the model "forgets" AGENTS.md 
 
 | Layer | What it is | Instances here |
 |---|---|---|
-| **Subagents** | Separate system prompts + sampling + permissions | `reviewer` (read-only), `bioinformatician` (nf-core conventions); built-in `build`/`plan` retuned |
-| **Skills** | On-demand instruction modules loaded by keyword match | 13 skills (see [components/skills.md](components/skills.md)) |
-| **Commands** | User-invoked prompt macros | `/gpu` status · `/checkpoint` task state → NOTES.md |
+| **Subagents** | Separate system prompts + sampling + permissions | `orchestrator`, `reviewer` (read-only), `skeptic` (read-only), `bioinformatician`; built-in `build`/`plan` retuned |
+| **Skills** | On-demand instruction modules loaded by keyword match | 30 bundled skills + optional gitignored `reference/skills.local/` (see [components/skills.md](components/skills.md)) |
+| **Commands** | User-invoked prompt macros | `/grill-me` · `/review` · `/red-team` · `/checkpoint` · `/doctor` |
 
 Sampling is per-agent because tasks differ: review wants determinism (temp 0.2), planning wants a little latitude (0.4). Values in [components/agents.md](components/agents.md).
 
@@ -78,10 +78,9 @@ This repo generalizes that pattern: `reference/` is the source of truth, `script
 | Context overflow → amnesia | tool_output caps, prune-compaction, retrieval ladder |
 | API hallucination | context7 docs-on-demand, LSP diagnostics |
 | Cross-session forgetting | memory MCP knowledge graph (`memory.json`) |
-| Self-inflicted VRAM OOM | iron rule: one model process per GPU; check `/gpu` before starting anything |
+| Self-inflicted VRAM OOM (local GPU setups) | one inference server per GPU; monitor via `nvtop` externally |
 | Bad edits shipped | reviewer subagent (edit denied, bash asks) |
 | Config drift / bad deploy | timestamped backups + jq validation before commit |
-| Thermal/power issues under load | gpu-prep.sh power limits (320 W cap on RTX 3090) |
 
 ## 6. Known trade-offs (accepted deliberately)
 

@@ -4,6 +4,18 @@ Append-only record of harness upgrades: what was added, why, and the public sour
 
 ---
 
+## 2026-11-01 — Hardware-Agnostic Pruning, Autonomous Zero-Overhead REA CLI & General Overnight Explorer
+
+What:
+1. Pruned hardware-coupled and redundant tools/skills: removed `/gpu` command (`nvtop` covers GPU monitoring externally), `scripts/gpu-prep.sh` (RTX 3090 specific), `scripts/export-trajectory.sh` (SFT trajectory export superseded by zero-weight-touch `lessons.jsonl`), `tool-installation` (Python-version-specific filler already in `AGENTS.md`), and duplicate `hybrid-routing` + `/hybrid` (consolidated into optional sibling `hybrid-sage`'s `model-router`).
+2. Rewrote `overnight-explorer` as a clean, zero-hardcoding, domain-general autonomous exploration skill (`FINDINGS_REPORT.md` + `ANALYSIS_METHODS.md` + refuted-hypothesis tracking) for unattended sessions while the host is away, and added gitignored `reference/skills.local/` support so machine-private skills remain synced locally without entering public git history.
+3. Pre-installed `rea-agents@6.4.0` CLI (`~/.local/bin/rea`) and added autonomous opaque-artifact trigger rules to `AGENTS.md` and `reverse-engineer-anything` so the agent inspects binaries, APKs, `.asar`, WASM/bytecode, firmware, and minified JS bundles automatically during codebase exploration while keeping the 140-tool `rea` MCP opt-in (`--with-rea`).
+4. Added missing `orchestrator` subagent sampling configuration (`0.3` / `0.85`) to `reference/opencode.template.json`, generalized `security-audit` into a stack-agnostic OWASP Top-10 web & API audit skill, and updated `scripts/activate.sh` + `scripts/doctor.sh` for clean `skills.local/` and `rea` CLI verification.
+Why: Keeps the default harness hardware-portable and zero-overhead on normal source-code turns while giving agents zero-touch binary inspection, unattended discovery, and clean separation between public and machine-local skills.
+Source: `skill-maker` pruning discipline (`anthropics/skills`, `obra/superpowers`), `morluto/rea` CLI (`rea-agents@6.4.0`).
+
+---
+
 ## 2026-10-31 — Swarm Orchestrator, Hybrid Routing & Doctor Hardening
 
 What:
@@ -16,10 +28,10 @@ Source: Self-improvement loop; user-orchestrator pattern; Conventional Commits &
 
 ---
 
-## 2026-10-27 — Provider migration: IGF Workplace AI → White-PC Strata
+## 2026-10-27 — Provider migration: Legacy Local Proxy → Direct OpenAI-Compatible Server
 
-What: template provider `workplace-ai` (Unsloth Studio `:8888`, dead) replaced by `strata` (llama-server `:8080`, model `qwen3.8-flash-next-iq3_s`, `limit.context` = `limit.output` = server-reported `n_ctx` 262144). `activate.sh`/`doctor.sh` fallback URLs → `:8080`; auto-sync parses llama-server's payload (`status.value=="loaded"`, `meta.n_ctx`; still accepts `loaded`/`context_length`). Per-agent thinking-model overrides removed — server serves one id. `reasoning_effort` moved from top-level model key to `options.reasoningEffort` (v2: top-level legacy `reasoning`/`temperature` are omitted; unknown keys invalidate the whole provider block → opencode skips it silently). `compaction.prune`/`tail_turns` dropped (v2-omitted legacy).
-Why: user report — IGF Workplace AI endpoint gone, config default pointed at a dead provider; server reports `n_ctx 262144` but old parser (`loaded`/`context_length`) matched nothing, so limits never synced; user wants generation to run to the window, not a small output cap.
+What: template provider `workplace-ai` (Unsloth Studio `:8888`, retired) replaced by `strata` (direct `llama-server` `:8080`, model `qwen3.8-flash-next-iq3_s`, `limit.context` = `limit.output` = server-reported `n_ctx` 262144). `activate.sh`/`doctor.sh` fallback URLs → `:8080`; auto-sync parses llama-server's payload (`status.value=="loaded"`, `meta.n_ctx`; still accepts `loaded`/`context_length`). Per-agent thinking-model overrides removed — server serves one id. `reasoning_effort` moved from top-level model key to `options.reasoningEffort` (v2: top-level legacy `reasoning`/`temperature` are omitted; unknown keys invalidate the whole provider block → opencode skips it silently). `compaction.prune`/`tail_turns` dropped (v2-omitted legacy).
+Why: retired proxy endpoint replaced with direct server; server reports `n_ctx 262144` so `activate.sh` syncs full window limits dynamically.
 Source: live `GET :8080/v1/models`; opencode v2.0.24 runtime log (provider skipped as malformed) + opencode.ai/config.json v2 schema (limit requires context AND output; model entry rejects unknown keys).
 
 ---

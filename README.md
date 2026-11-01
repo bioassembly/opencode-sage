@@ -33,13 +33,13 @@ Installed directly into `~/.local/bin`:
 - **`memory`**: Local MCP knowledge graph for durable project memory (`~/.config/opencode/memory.json`).
 - **`fetch`**: Lightweight static web content extraction (`mcp-server-fetch`).
 - **`playwright`**: Headless browser automation for dynamic single-page web applications (`@playwright/mcp@0.0.79`).
-- **`rea`**: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — local stdio (`npx -y rea-agents@6.4.0 mcp`, compact input-schema profile, 60s timeout). Static routes work with zero extra installs; native decompilation needs Ghidra (not bundled).
+- **`rea`** *(opt-in `--with-rea`)*: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — omitted by default to save ~140 tool schemas per turn.
 
-### 3. Vetted Agent Skills (31 Total)
+### 3. Vetted Agent Skills (30 Bundled + Gitignored `skills.local/`)
 - **Core Software Engineering**: `grill-me` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
-- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `tool-installation`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
-- **Reverse Engineering**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — binaries, APKs, firmware, Electron apps, WASM/EVM with no source; auto-activates on no-source targets, stays out of source-level work.
-- **Context & Reasoning Discipline**: `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing`, `hybrid-routing`.
+- **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
+- **Reverse Engineering (Zero-Overhead Autonomous CLI)**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — autonomously activates pre-installed `rea` CLI during codebase exploration when encountering compiled binaries, `.so`/`.dll`/`.dylib`, APKs, `.asar`, WASM/bytecode, firmware, or minified JS bundles without source (optional full MCP via `bash scripts/activate.sh --with-rea`).
+- **Autonomous Discovery & Context Discipline**: `overnight-explorer` (unattended multi-iteration research/dataset/codebase exploration while the host is away), `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing` *(plus `model-router` when optional sibling `hybrid-sage` is present, and any machine-private skills placed in gitignored `reference/skills.local/`)*.
 
 ### 4. Custom Subagents (`~/.config/opencode/agent/`)
 - **`orchestrator`**: Autonomous swarm meta-orchestrator deconstructing complex initiatives into decoupled workstreams and coordinating parallel subagents.
@@ -52,8 +52,7 @@ Installed directly into `~/.local/bin`:
 - `/review`: Proactive git working diff review via `reviewer` subagent.
 - `/red-team`: Adversarial pre-implementation plan attack via `skeptic` subagent.
 - `/checkpoint`: Context dump to `NOTES.md` before compaction or session boundary.
-- `/gpu`: GPU VRAM, power limits, and inference process monitor.
-- `/doctor`: Harness integrity and health diagnostic suite.
+- `/doctor`: Harness integrity and health diagnostic suite *(plus `/fleet`, `/route`, `/escalate` when optional sibling `hybrid-sage` is installed)*.
 
 ### 6. Global Rules (`~/.config/opencode/AGENTS.md`)
 Machine-wide agent protocol enforcing:
@@ -77,7 +76,7 @@ cd opencode-sage
 bash scripts/install-lsps.sh
 
 # 3. Stage & activate the harness (with automatic timestamped backup)
-bash scripts/activate.sh [--base-url <url>] [--key <api-key>]
+bash scripts/activate.sh [--base-url <url>] [--key <api-key>] [--with-rea]
 
 # 4. Verify health with Doctor
 bash scripts/doctor.sh
@@ -88,8 +87,8 @@ bash scripts/doctor.sh
 2. Deploys `reference/opencode.template.json` to `~/.config/opencode/opencode.json` with dynamic endpoint and memory path resolution.
 3. Installs subagents into `~/.config/opencode/agent/`.
 4. Installs slash commands into `~/.config/opencode/command/`.
-5. Syncs all 31 vetted skills into `~/.config/opencode/skills/`.
-6. Deploys global agent protocol rules to `~/.config/opencode/AGENTS.md`.
+5. Syncs all 30 vetted skills (plus any gitignored `reference/skills.local/` skills) into `~/.config/opencode/skills/` (pruning retired/orphaned entries).
+6. Deploys global agent protocol rules to `~/.config/opencode/AGENTS.md` and synchronizes optional sibling `hybrid-sage` if present.
 
 ---
 
@@ -133,16 +132,14 @@ opencode-sage/
 ├── reference/                  # Source of truth installed into ~/.config/opencode
 │   ├── AGENTS.md               # Global agent instructions
 │   ├── opencode.template.json  # Staged config template
-│   ├── agents/                 # Subagent definitions (reviewer, skeptic, bioinformatician)
-│   ├── commands/               # Slash commands (review, red-team, checkpoint, gpu, doctor)
-│   └── skills/                 # 31 curated agent skills + REGISTRY.md
+│   ├── agents/                 # Subagent definitions (orchestrator, reviewer, skeptic, bioinformatician)
+│   ├── commands/               # Slash commands (grill-me, review, red-team, checkpoint, doctor)
+│   └── skills/                 # 30 curated, hardware-portable agent skills + REGISTRY.md
 └── scripts/                    # Automation scripts
     ├── activate.sh             # Idempotent installer with auto-backup
     ├── doctor.sh               # Health check diagnostic suite
-    ├── export-trajectory.sh    # Export sessions as JSONL for SFT datasets
     ├── install-lsps.sh         # LSP compiler installer
-    ├── pin-mcp.sh              # MCP package version pin tool
-    └── gpu-prep.sh             # GPU power cap script
+    └── pin-mcp.sh              # MCP package version pin tool
 ```
 
 ---

@@ -7,14 +7,14 @@
   "provider": {
     "strata": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "White-PC Strata",
+      "name": "Local OpenAI-Compatible Provider",
       "options": {
         "baseURL": "__BASE_URL__",
         "apiKey": "__UNSLOTH_API_KEY__"
       },
       "models": {
         "qwen3.8-flash-next-iq3_s": {
-          "name": "White-PC Strata (IQ3_S)",
+          "name": "Configured Local Model",
           "tool_call": true,
           "temperature": true,
           "reasoning": true,
@@ -37,6 +37,13 @@
     "plan": {
       "temperature": 0.4,
       "top_p": 0.9
+    },
+    "orchestrator": {
+      "description": "Autonomous swarm meta-orchestrator. Deconstructs complex initiatives into decoupled workstreams, dynamically spawns and coordinates specialized parallel subagents, monitors tasks, and synthesizes outputs.",
+      "mode": "subagent",
+      "temperature": 0.3,
+      "top_p": 0.85,
+      "color": "info"
     },
     "reviewer": {
       "description": "Read-only code review. Use proactively after multi-file edits or before committing.",
@@ -124,20 +131,6 @@
       "enabled": true,
       "environment": {
         "MEMORY_FILE_PATH": "__MEMORY_PATH__"
-      }
-    },
-    "rea": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "rea-agents@6.4.0",
-        "mcp"
-      ],
-      "enabled": true,
-      "timeout": 60000,
-      "environment": {
-        "REA_MCP_INPUT_SCHEMA_PROFILE": "compact"
       }
     }
   },

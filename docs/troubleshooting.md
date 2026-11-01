@@ -17,7 +17,7 @@ Symptom → lever. Adjust in the staged config, re-run `scripts/activate.sh`, re
 
 ## Diagnostic order
 
-1. `/gpu` or `nvidia-smi` — is anything actually running? How full is VRAM?
+1. `nvtop` (for local GPU setups) or `/doctor` — is your configured provider reachable?
 2. `curl -s http://127.0.0.1:<port>/props | jq '.default_generation_settings.n_ctx'` — what does the server *really* offer?
 3. Compare with config `limit.context` — mismatch explains most "amnesia" reports.
 4. Check `~/.config/opencode/backup-*/` — did a recent activate.sh change something you didn't expect?

@@ -17,7 +17,8 @@ npm install -g --silent \
   @tailwindcss/language-server \
   intelephense \
   typescript \
-  typescript-language-server
+  typescript-language-server \
+  rea-agents@6.4.0
 
 echo "==> marksman (Markdown / Quarto .qmd)"
 BIN="$HOME/.local/bin/marksman"
@@ -33,6 +34,6 @@ fi
 
 echo
 echo "Installed binaries:"
-ls "$HOME/.local/bin" | grep -E 'language-server|pyright|marksman|intelephense' || true
+ls "$HOME/.local/bin" | grep -E 'language-server|pyright|marksman|intelephense|^rea$' || true
 echo
 echo "LSP installation and verification complete."
