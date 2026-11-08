@@ -28,8 +28,9 @@ On session start, and before every non-trivial task:
 
 When the `hybrid-sage` plugin/MCP is connected:
 - **Direct Execution First**: Execute routine coding, bug fixes, refactoring, and test execution directly in OpenCode (never call `delegate_local` on yourself).
-- **Proactive Upfront Routing**: For ambiguous greenfield system design or complex algorithmic trade-offs, run `route_task(prompt="...")` upfront. Use the available cross-harness consultation tool for the selected unit (Antigravity or Codex), respecting configured provider cost and privacy constraints. An unavailable destination falls back to direct execution, not an implicit paid provider.
+- **Proactive Upfront Routing**: For ambiguous greenfield system design or complex algorithmic trade-offs, run `route_task(prompt="...")` upfront. Use `consult_codex` for snapshot-based Codex diagnosis or `escalate_task` for Antigravity, respecting configured provider cost and privacy constraints. An unavailable destination falls back to direct execution, not an implicit paid provider.
 - **Repeated failures**: After two failed fixes, reassess the assumptions and reduce the reproducer. Use available cross-harness consultation with the failing command, output, and attempted approaches when it can help; then verify the advice locally. Avoid recursive delegation.
+- **Child Worker Boundary**: A worker started with `HYBRID_SAGE_CHILD` executes only its assigned scope and verification; do not recursively delegate or escalate. Report changed files, commands, outcomes, and blockers so the parent can integrate and review.
 - **Project-Scoped Lessons**: Reusable root-cause invariants are persisted in `~/.config/opencode/lessons.jsonl` and surfaced automatically on matching repositories.
 
 ## Post-Task Learning Loop

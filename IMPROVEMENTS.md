@@ -152,3 +152,14 @@ Hypothesis: a skill-gated REA MCP adds binary/artifact analysis (zero coverage t
   prevents dead-end retrieval and irrelevant installs. Static/link checks and
   isolated activation are the validation for this change; behavioral A/B gains
   remain unmeasured. Frozen cases: `evals/cases/procedure-selection.md`.
+
+### Hybrid SAGE three-harness integration
+
+- Antigravity can proactively partition substantial work into independent free-only
+  OpenCode jobs, bounded by the configured concurrency limit, with explicit file
+  ownership and parent integration/review. Codex diagnosis uses `consult_codex`;
+  Antigravity diagnosis uses `escalate_task`. Child workers do not recurse.
+- Source: sibling hybrid-sage tool contracts (`list_worker_models`, `delegate_local`,
+  `consult_codex`) and the user's request for a Codex/Antigravity/OpenCode fleet.
+- Free-model allowlists describe operator policy, not unlimited quota or local data
+  residency. Unavailable workers fall back to direct work without paid rerouting.
