@@ -147,3 +147,18 @@ opencode-sage/
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Maintaining skill quality
+
+Run `python3 scripts/validate-skills.py` before activating skill changes. It checks
+required metadata and local Markdown resource links, including inline guide paths.
+Scientific skills link to official version-aware documentation instead of referring
+to guides that are absent from this repository. Test examples in the actual project
+environment; a link check does not establish scientific correctness or model quality.
+
+Skill acquisition follows demonstrated reusable needs and existing authorization.
+A missing skill can be handled with official documentation directly. Existing
+project environments, `uv`/venv, or named conda environments are preferred for Python.
+Optional Hybrid SAGE routing can connect Antigravity, OpenCode, and Codex when the
+corresponding workers are configured; provider privacy and cost are checked rather
+than inferred from the harness name.

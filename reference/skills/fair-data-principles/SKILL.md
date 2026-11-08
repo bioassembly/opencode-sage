@@ -69,8 +69,8 @@ Core principle: Scientific data and computational pipelines must be first-class 
 * **R1.1. Clear Open-Source License:**
   - The repository must include an explicit, permissive open-source license file (`LICENSE`), such as MIT or Apache-2.0 for code, and CC-BY 4.0 for data.
 * **R1.2. Detailed Provenance & Reproducibility:**
-  - Document all underlying tools, algorithm versions, and reference database dates in [`CITATIONS.md`](CITATIONS.md).
-  - Provide locked environment specifications: Conda/Mamba [`environment.yml`](environment.yml) and Python [`requirements.txt`](requirements.txt).
+  - Document all underlying tools, algorithm versions, and reference database dates in `CITATIONS.md` in the target project.
+  - Provide locked environment specifications: Conda/Mamba `environment.yml` in the target project and Python `requirements.txt` in the target project.
   - Provide executable bash scripts (`command.sh`) with strict error flags (`set -euo pipefail`).
 * **R1.3. Domain-Relevant Standards Compliance:**
   - **Genomics & MAGs:** Follow the **MIMAG standards** ([Bowers et al., 2017 *Nat. Biotechnol.*](https://doi.org/10.1038/nbt.3893)) for reporting High-Quality (HQ), Medium-Quality (MQ), and Low-Quality (LQ) MAGs.

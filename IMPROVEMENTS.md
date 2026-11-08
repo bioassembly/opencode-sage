@@ -127,3 +127,28 @@ Hypothesis: a skill-gated REA MCP adds binary/artifact analysis (zero coverage t
 - Added `skeptic` subagent for pre-implementation red-teaming.
 - Added `/doctor` and `/review` commands.
 - Established documentation on quantization, context engineering, and evaluation.
+
+## 2026-11-08 — Skill integrity and scoped autonomous learning
+
+- Aligned acquisition and post-task learning: use official docs for one-off gaps;
+  install vetted reusable skills when requested or within authorized harness work.
+  Removed arbitrary star-count gates as a substitute for inspecting instructions,
+  references, license, and compatibility. Existing authorization remains sufficient.
+- Replaced default system Python overrides with existing project environments,
+  `uv`/venv, or named conda environments; removed hardcoded environment assumptions.
+- Repaired absent Nextflow, pysam, Biopython, and MCP guide references using official
+  documentation; added local MCP evaluation and behavior-oriented test guidance.
+  Preserved upstream attribution and clarified illustrative scientific examples.
+- Added dependency-free skill metadata/resource validation before activation,
+  four regression tests for the validator, and CI coverage. Corrected repository
+  instructions so smoke tests preserve live credentials and use temporary HOME.
+- Made review, design interviews, worktrees, and cross-harness escalation proportional
+  to the task, with Codex-aware consultation and graceful unavailable-tool fallback.
+- Sources: local audit; https://docs.seqera.io/nextflow/;
+  https://nf-co.re/docs/developing/overview; https://pysam.readthedocs.io/;
+  https://biopython.org/docs/latest/Tutorial/; official MCP SDK repositories and
+  https://modelcontextprotocol.io/docs/develop/build-server.
+- Hypothesis: resolving broken resource routes and conflicting acquisition rules
+  prevents dead-end retrieval and irrelevant installs. Static/link checks and
+  isolated activation are the validation for this change; behavioral A/B gains
+  remain unmeasured. Frozen cases: `evals/cases/procedure-selection.md`.

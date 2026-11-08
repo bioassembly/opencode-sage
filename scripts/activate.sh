@@ -27,6 +27,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Validate staged skills before changing the installed harness.
+python3 "$REPO/scripts/validate-skills.py"
+
 mkdir -p "$DST" "$HOME/.local/bin"
 ln -sfn "$REPO/scripts/doctor.sh" "$HOME/.local/bin/opencode-doctor"
 

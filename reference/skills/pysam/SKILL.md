@@ -23,10 +23,13 @@ Use pysam for low-level, streaming access to HTSlib-supported genomic formats:
 - `pysam.samtools` and `pysam.bcftools` for wrapped command dispatchers
 
 Current upstream baseline: **pysam 0.24.1** (7 September 2026), wrapping
-HTSlib/samtools/bcftools 1.24. Read `references/sources.md` before updating
+HTSlib/samtools/bcftools 1.24. Read [sources guide](https://pysam.readthedocs.io/en/latest/) before updating
 version-specific guidance.
 
 ## Installation
+
+Use the project environment or create an isolated venv first. Direct these
+commands at that environment; preserve system package protections.
 
 Use the pinned release for reproducible work:
 
@@ -45,7 +48,7 @@ print(pysam.__samtools_version__)  # 1.24
 
 Prebuilt wheels are available for supported macOS and Linux platforms. A
 source build needs a C compiler and HTSlib build dependencies; read the
-official installation guide linked from `references/sources.md`.
+official installation guide linked from [sources guide](https://pysam.readthedocs.io/en/latest/).
 
 ## First Decide
 
@@ -108,7 +111,7 @@ record.start  # 0-based inclusive
 record.stop   # 0-based exclusive
 ```
 
-Read `references/coordinates_and_indexing.md` for format conversions, overlap
+Read [coordinates and indexing guide](https://pysam.readthedocs.io/en/latest/faq.html) for format conversions, overlap
 semantics, index choices, and contig-name checks.
 
 ## Alignment Files
@@ -173,7 +176,7 @@ with pysam.FastaFile("reference.fa") as fasta, pysam.AlignmentFile(
         print(column.reference_pos, base_depth)
 ```
 
-Read `references/alignment_files.md` for flags, CIGAR operations, tags,
+Read [alignment files guide](https://pysam.readthedocs.io/en/latest/usage.html) for flags, CIGAR operations, tags,
 modified bases, writing records, pileup details, and iterator lifetime.
 
 ## Variant Files
@@ -203,7 +206,7 @@ When changing a header, copy each record and translate it to the destination
 header before assigning newly declared INFO/FORMAT/FILTER fields. Do not
 manually clear and rebuild `header.samples`.
 
-Read `references/variant_files.md` for safe headers, writing, sample
+Read [variant files guide](https://pysam.readthedocs.io/en/latest/api.html#variant-files) for safe headers, writing, sample
 subsetting, missing genotypes, symbolic alleles, filtering, translation, and
 indexing.
 
@@ -238,7 +241,7 @@ with pysam.TabixFile("regions.bed.gz", parser=pysam.asBed()) as tbx:
         print(interval.contig, interval.start, interval.end)
 ```
 
-Read `references/sequence_files.md` for FASTA/FASTQ records and safe tabix
+Read [sequence files guide](https://pysam.readthedocs.io/en/latest/api.html) for FASTA/FASTQ records and safe tabix
 creation.
 
 ## CRAM, Remote I/O, and Threads
@@ -265,7 +268,7 @@ Only configure `REF_PATH`/`REF_CACHE` when reference-by-MD5 lookup is
 intentional. Do not assume a CRAM is self-contained. `threads=` accelerates
 compression/decompression; it does not parallelize Python analysis.
 
-Read `references/cram_and_performance.md` before CRAM conversion, remote access,
+Read [cram and performance guide](https://pysam.readthedocs.io/en/latest/api.html#pysam.AlignmentFile) before CRAM conversion, remote access,
 or concurrent iteration.
 
 ## Wrapped samtools and bcftools
@@ -323,15 +326,15 @@ dispatcher arguments by splitting an untrusted shell command.
 
 | Need | Read |
 |---|---|
-| Alignment API, flags, CIGAR, pileup, modified bases | `references/alignment_files.md` |
-| VCF/BCF headers, records, samples, writing | `references/variant_files.md` |
-| FASTA/FASTQ and tabix-indexed tables | `references/sequence_files.md` |
-| Coordinate conversion and index selection | `references/coordinates_and_indexing.md` |
-| CRAM references, remote I/O, threads, performance | `references/cram_and_performance.md` |
-| Correct integrated analysis patterns | `references/common_workflows.md` |
-| Compact current API signatures and defaults | `references/api_reference.md` |
-| Upgrade notes for existing environments | `references/migration_to_0_24.md` |
-| Official docs, specifications, and release sources | `references/sources.md` |
+| Alignment API, flags, CIGAR, pileup, modified bases | [alignment files guide](https://pysam.readthedocs.io/en/latest/usage.html) |
+| VCF/BCF headers, records, samples, writing | [variant files guide](https://pysam.readthedocs.io/en/latest/api.html#variant-files) |
+| FASTA/FASTQ and tabix-indexed tables | [sequence files guide](https://pysam.readthedocs.io/en/latest/api.html) |
+| Coordinate conversion and index selection | [coordinates and indexing guide](https://pysam.readthedocs.io/en/latest/faq.html) |
+| CRAM references, remote I/O, threads, performance | [cram and performance guide](https://pysam.readthedocs.io/en/latest/api.html#pysam.AlignmentFile) |
+| Correct integrated analysis patterns | [common workflows guide](https://pysam.readthedocs.io/en/latest/usage.html) |
+| Compact current API signatures and defaults | [api reference guide](https://pysam.readthedocs.io/en/latest/api.html) |
+| Upgrade notes for existing environments | [migration to 0 24 guide](https://pysam.readthedocs.io/en/latest/release.html) |
+| Official docs, specifications, and release sources | [sources guide](https://pysam.readthedocs.io/en/latest/) |
 
 ## Common Failure Modes
 

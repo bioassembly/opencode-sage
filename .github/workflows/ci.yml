@@ -19,3 +19,9 @@ jobs:
           for f in scripts/*.sh; do
             bash -n "$f"
           done
+
+      - name: Bundled skill integrity
+        run: python3 scripts/validate-skills.py
+
+      - name: Validator tests
+        run: python3 -m unittest discover -s tests -v

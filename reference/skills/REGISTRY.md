@@ -30,3 +30,5 @@ Format: `- YYYY-MM-DD <skill-name> <- <source repo/url> (stars: N) <one-line not
 - 2026-10-25 to-tickets <- github.com/mattpocock/skills (stars: 302.6k, MIT) — tracer-bullet vertical slice tickets with explicit blocking edges and expand-contract refactoring
 - 2026-10-25 git-commit-convention <- self-authored (conventionalcommits.org 1.0.0, GitHub Docs, cbea.ms) — history-first house-style inference, Conventional Commits format, imperative summaries, closing keywords, amend/force-with-lease fix path
 - 2026-11-01 overnight-explorer <- self-authored — domain-general unattended autonomous discovery loop (hypothesis ledger, refuted-hypothesis tracking, `FINDINGS_REPORT.md` + `ANALYSIS_METHODS.md` synthesis)
+
+- 2026-11-08 harness-integrity pass <- local audit + official MCP SDK, Nextflow/Seqera, pysam, and Biopython documentation — repaired unavailable scientific/MCP guide links, added local MCP evaluation and test-design guides, aligned acquisition with authorized maintenance, and preferred isolated Python environments. New support text is locally authored; existing upstream attribution remains.

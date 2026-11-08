@@ -2,14 +2,14 @@
 
 ## What this repo is
 
-Docs + staged config for the opencode-sage coding harness. No application code, no build system, no test suite, no CI — content is Markdown, one JSON config template, and four bash scripts.
+Docs + staged config for the opencode-sage coding harness: Markdown skills and agents, one JSON config template, activation/diagnostic scripts, and a small skill-integrity validator with tests and CI.
 
 ## Core workflow: stage → activate → restart
 
 `reference/` is the source of truth; `scripts/activate.sh` installs it into `~/.config/opencode`.
 
 1. Edit under `reference/` (opencode.template.json, agents/, commands/, skills/) or `docs/`.
-2. Re-run `./scripts/activate.sh --key <any-non-empty-string>` (idempotent; auto-backs up live config to `~/.config/opencode/backup-<ts>/` and prints the rollback path).
+2. Re-run `./scripts/activate.sh` to preserve the configured key and provider URL (auto-backs up live config and prints the rollback path). Pass `--key`/`--base-url` only when intentionally changing them.
 3. Restart opencode — config is read only at startup.
 
 Never edit `~/.config/opencode/` directly: the next `activate.sh` run overwrites it.
@@ -31,11 +31,13 @@ Never edit `~/.config/opencode/` directly: the next `activate.sh` run overwrites
 
 ## Verification
 
-No test suite. Before committing:
+Before committing:
 
 ```bash
 jq empty reference/opencode.template.json   # config parses
-bash -n scripts/*.sh                        # scripts parse
+for f in scripts/*.sh; do bash -n "$f"; done # scripts parse
+python3 scripts/validate-skills.py           # skill resources present
+python3 -m unittest discover -s tests -v     # validator behavior
 ```
 
-If you changed anything `activate.sh` installs, actually run it (`--key x`) and confirm "Config JSON valid."
+If you changed anything `activate.sh` installs, run it in an isolated temporary HOME and confirm "Config JSON valid." Use a copied checkout without sibling plugin installers and an already-present/stubbed `rea` CLI to avoid unrelated global package installation. Never replace the live provider key with a test value.
