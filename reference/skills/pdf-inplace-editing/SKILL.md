@@ -3,6 +3,9 @@ name: pdf-inplace-editing
 description: In-place PDF editing/anonymization, zero layout drift — content-stream swaps, raster re-lettering, pixel-diff verified.
 ---
 
+Visual replacement is not secure redaction. Content-stream swaps and raster whiteouts can leave identifiers in underlying objects, metadata, annotations, or attachments. For an actual redaction request, use a true content-removal workflow and inspect residual text/images and relevant hidden content before claiming removal.
+
+
 # In-Place PDF Editing (Zero Layout Drift)
 
 ## What I do
@@ -11,7 +14,7 @@ description: In-place PDF editing/anonymization, zero layout drift — content-s
 - Verify every edit: pixel-diff against the original + residual identifier scan before delivery.
 
 ## Golden rules
-1. Never use redact/insert_text for text-layer edits — redaction erases and re-typesets → font/size/kerning drift. Swap bytes in the content stream instead.
+1. For cosmetic text corrections, preserve layout with validated content-stream changes when encoding permits. Actual redaction is a separate content-removal workflow.
 2. Always back up the original first (`cp ORIG /tmp/agy/<name>.orig.pdf`). Never work without a pristine copy.
 3. `scan` before editing: dump spans (bbox, size, font) and image list to build the edit list. PDFs escape parens as `\(` `\)`.
 4. Replace longest/most specific strings first (full paths before fragments); every pair must report hits > 0 (script exits non-zero on MISS).
@@ -21,7 +24,7 @@ description: In-place PDF editing/anonymization, zero layout drift — content-s
 
 ## Workflow
 ```bash
-S=~/.gemini/config/skills/pdf-inplace-editing/pdf_edit.py
+S=/absolute/path/to/installed/skill/pdf_edit.py
 cp ORIG.pdf /tmp/agy/name.orig.pdf          # pristine backup
 python3 $S scan ORIG.pdf                          # text spans: page, bbox, size, font
 python3 $S scan ORIG.pdf --images                 # raster images: bbox + pixel size + xref

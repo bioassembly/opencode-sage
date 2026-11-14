@@ -1,11 +1,12 @@
 ---
 name: to-spec
-description: Turn the current conversation and architectural decisions into a concrete technical specification. Synthesizes discussion without interviewing.
+description: "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed."
+disable-model-invocation: true
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-Save the specification directly to `docs/specs/<feature-name>.md` (or publish it to the project's configured issue tracker).
+The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
 
 ## Process
 

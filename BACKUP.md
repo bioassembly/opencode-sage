@@ -1,3 +1,7 @@
+# Current restore journals
+
+Current activation and RTK installation print exact `python3 scripts/harness.py restore <journal.json>` commands. Restore multiple installations in reverse order. Journals are private and refuse to overwrite subsequent edits. User notes/skills are preserved; no automatic backup pruning runs. The older copy-based backup instructions below apply to historical installations.
+
 # Backup & Restore
 
 How to back up and restore the opencode harness. Written so a human or an AI agent can execute it verbatim.

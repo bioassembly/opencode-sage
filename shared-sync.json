@@ -1,0 +1,86 @@
+{
+  "reviewed": "2026-11-15",
+  "canonical_repository": "bioassembly/codex-sage",
+  "shared_files": [
+    {
+      "canonical": "scripts/merge_config.py",
+      "target": "scripts/merge_config.py",
+      "sha256": "6b49f5d9646ba5991d2b8bbb10bc31fd947a318c0ec070fed31c3258ee929124"
+    },
+    {
+      "canonical": "scripts/install_rtk.py",
+      "target": "scripts/install_rtk.py",
+      "sha256": "ad884e72379227a178e1a1173e18f69206806bb233ac308b9edf7deff6649a4c"
+    },
+    {
+      "canonical": "scripts/token_audit.py",
+      "target": "scripts/token_audit.py",
+      "sha256": "45967545dab27903b54b0759446e509dc0646482d49723866698c9b8d498cfd3"
+    },
+    {
+      "canonical": "ports/client_state.py",
+      "target": "scripts/client_state.py",
+      "sha256": "1789faf5440766692917361f44a07853abf44a3edf78373c425aa96251d373c7"
+    },
+    {
+      "canonical": "ports/client_state.py",
+      "target": "scripts/harness.py",
+      "sha256": "1789faf5440766692917361f44a07853abf44a3edf78373c425aa96251d373c7"
+    },
+    {
+      "canonical": "ports/install_client.py",
+      "target": "scripts/install_client.py",
+      "sha256": "1d1dccce21bcd362970e23f7be1523192ef8da119e52e9b541544dd5111bc4d1"
+    },
+    {
+      "canonical": "ports/validate_vendor.py",
+      "target": "scripts/validate_vendor.py",
+      "sha256": "ca4829cef1e87d6807006b7863d174b1e59f7bc07eb329b378bd66919a2a83e6"
+    },
+    {
+      "canonical": "tests/test_client_activation.py",
+      "target": "tests/test_client_activation.py",
+      "sha256": "678bf17ef23993a209c0e8e17377719cf06d90992a8fc666de38385e1aef0a68"
+    },
+    {
+      "canonical": "tests/test_client_config.py",
+      "target": "tests/test_client_config.py",
+      "sha256": "be0b0fe87f3a8786c24793ed0972aead745651fbf5ea83e23c7a8da66d3402ef"
+    },
+    {
+      "canonical": "ports/test_mcp_evaluation.py",
+      "target": "tests/test_mcp_evaluation.py",
+      "sha256": "6cbb3f2c8afaab8f44cd0ed99339f6ffc3ecf433a56021e0b0ea8fa58e53ae2d"
+    },
+    {
+      "canonical": "config/AGENTS.md",
+      "target": "reference/AGENTS.md",
+      "sha256": "e30c2295d491f506c9a9badc7efd68745fc7a104c86207de5ebc195e7279873c"
+    },
+    {
+      "canonical": "shared/scientific-notes.md",
+      "target": "reference/shared/scientific-notes.md",
+      "sha256": "f5eea22a589066e3006dedd7e3e5d3d0001502478da3aa7df02cd6b03bc77cbb"
+    },
+    {
+      "canonical": "docs/shared-sync.md",
+      "target": "docs/shared-sync.md",
+      "sha256": "dd00ed29097dd4535ec41b6fca653dabeb1bdc490955a11e46d1af9426752487"
+    },
+    {
+      "canonical": "patches/mcp-evaluation-parallel.patch",
+      "target": "patches/mcp-evaluation-parallel.patch",
+      "sha256": "c4d71d16e11fe0cfb1b0b8312791792a32d5789f3d26310aba1d6ea44c34b415"
+    },
+    {
+      "canonical": "runtime/rtk/opencode/rtk.ts",
+      "target": "runtime/rtk/opencode/rtk.ts",
+      "sha256": "989e9231b0a28b538a88caf7c6d11327ebe07cbee6d41c84947fbb01d4898aa4"
+    },
+    {
+      "canonical": "runtime/rtk/opencode/rtk.test.mjs",
+      "target": "runtime/rtk/opencode/rtk.test.mjs",
+      "sha256": "428afe0d5ffc6b11e1cc71152089c2cd4d6c177c9bac5baa0d91b6af5c444c53"
+    }
+  ]
+}

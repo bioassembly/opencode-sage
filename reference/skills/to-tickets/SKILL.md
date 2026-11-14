@@ -1,13 +1,14 @@
 ---
 name: to-tickets
-description: Break a plan, spec, or conversation into tracer-bullet vertical slice tickets, each declaring its blocking dependencies.
+description: Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).
+disable-model-invocation: true
 ---
 
 # To Tickets
 
 Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-Save local ticket files under `.scratch/<feature-slug>/issues/<NN>-<slug>.md` or publish directly to the project issue tracker (GitHub/GitLab/Linear).
+The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
 
 ## Process
 

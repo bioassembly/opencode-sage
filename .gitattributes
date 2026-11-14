@@ -1,0 +1,25 @@
+# Preserve pinned upstream bytes, including Markdown hard breaks.
+reference/skills/variant-analysis/** -text -whitespace
+reference/skills/differential-review/** -text -whitespace
+reference/skills/vercel-react-best-practices/** -text -whitespace
+reference/skills/ponytail/** -text -whitespace
+reference/skills/grill-me/** -text -whitespace
+reference/skills/grilling/** -text -whitespace
+reference/skills/codebase-design/** -text -whitespace
+reference/skills/domain-modeling/** -text -whitespace
+reference/skills/to-spec/** -text -whitespace
+reference/skills/to-tickets/** -text -whitespace
+reference/skills/setup-matt-pocock-skills/** -text -whitespace
+reference/skills/systematic-debugging/** -text -whitespace
+reference/skills/test-driven-development/** -text -whitespace
+reference/skills/using-git-worktrees/** -text -whitespace
+reference/skills/verification-before-completion/** -text -whitespace
+reference/skills/mcp-builder/** -text -whitespace
+reference/skills/webapp-testing/** -text -whitespace
+reference/skills/nextflow/** -text -whitespace
+reference/skills/pysam/** -text -whitespace
+reference/skills/biopython/** -text -whitespace
+third_party/licenses/** -text -whitespace
+runtime/rtk/** -text -whitespace
+# Unified patches require a space prefix on blank context lines.
+patches/*.patch -whitespace

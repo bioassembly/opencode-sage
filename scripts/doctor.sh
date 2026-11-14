@@ -97,7 +97,7 @@ fi
 
 # 4b. Optional Hybrid SAGE Integration Check
 if [ -f "$CFG" ]; then
-  if jq -e '.mcp["hybrid-sage"]' "$CFG" &>/dev/null; then
+  if jq -e '.mcp["hybrid-sage"] | select(.enabled != false)' "$CFG" &>/dev/null; then
     check_pass "hybrid-sage MCP & plugin registered in opencode.json"
   else
     check_info "hybrid-sage plugin not installed (standalone OpenCode mode)"
@@ -172,10 +172,10 @@ fi
 
 # 9. Lean MCP Footprint & Backup Hygiene
 if [ -f "$CFG" ]; then
-  if jq -e '.mcp["rea"]' "$CFG" &>/dev/null; then
-    check_warn "REA MCP active (170 tools / ~67.6k schema tokens per turn; re-run activate.sh without --with-rea to use zero-overhead rea CLI)"
+  if jq -e '.mcp["rea"] | select(.enabled != false)' "$CFG" &>/dev/null; then
+    check_info "REA MCP enabled. Disable its native MCP entry when the installed CLI provides the required capability."
   else
-    check_pass "Lean MCP footprint active (REA 170-tool MCP omitted, saving ~67.6k tokens/turn; rea CLI ready)"
+    check_pass "REA MCP absent or disabled; this registration adds no active REA tool schemas."
   fi
 fi
 
@@ -183,7 +183,7 @@ BACKUPS=$(find "$HOME/.config/opencode" -maxdepth 1 -type d -name "backup-*" 2>/
 if [ "$BACKUPS" -le 5 ]; then
   check_pass "Backup hygiene good ($BACKUPS backups found)"
 else
-  check_warn "High backup count ($BACKUPS backups). Run with --prune-backups or re-run activate.sh to prune."
+  check_info "$BACKUPS legacy backups retained. Review before using --prune-backups; activation preserves backups."
 fi
 
 echo "==================================================="

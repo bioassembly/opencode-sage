@@ -163,3 +163,11 @@ Hypothesis: a skill-gated REA MCP adds binary/artifact analysis (zero coverage t
   `consult_codex`) and the user's request for a Codex/Antigravity/OpenCode fleet.
 - Free-model allowlists describe operator policy, not unlimited quota or local data
   residency. Unavailable workers fall back to direct work without paid rerouting.
+
+## 2026-11-14 — Shared Codex SAGE and upstream refresh
+
+Restored original Ponytail/grill-me behavior and installed the full grilling/setup dependencies. Refreshed pinned upstream engineering/scientific packages and added Trail of Bits/Vercel packages. Kept local scientific validation guidance as a host supplement. Added reversible file journals and preference-preserving JSON merges; removed automatic Hybrid/REA installation and destructive skill-tree synchronization. Migrated native plugin configuration to OpenCode 2.x plugins. RTK uses its native dual-interface plugin. Original bytes and explicit compatibility fixes are verified by the vendored manifest. Validation details and source references are in docs/shared-sync.md and third_party/lock.json.
+
+## 2026-11-15 — Original upstream packages and reversible shared integration
+
+Complete source packages/resources are pinned in third_party/lock.json. Original Ponytail and grilling text is unchanged. Native skill routing, compiled-guide compatibility aliases, and the independently tested MCP parallel-result correction are recorded outside or alongside the relevant upstream files. Shared installers preserve preferences, local skill overrides, personal plugin files and user notes, and journal explicit Hybrid deactivation including auto-discovered plugins. No model job or provider change is required to update the harness. See docs/shared-sync.md.

@@ -29,13 +29,13 @@ Installed directly into `~/.local/bin`:
 ### 2. Model Context Protocol (MCP) Servers
 - **`context7`**: Remote Streamable HTTP MCP for real-time framework & library API documentation (`https://mcp.context7.com/mcp`).
 - **`deepwiki`**: Remote Streamable HTTP MCP for querying AI-indexed GitHub repository wikis and architectures without credentials (`https://mcp.deepwiki.com/mcp`).
-- **`sequential-thinking`**: Local MCP structured planning scratchpad (`@modelcontextprotocol/server-sequential-thinking@2026.7.4`).
+- **`sequential-thinking`**: Optional local MCP structured planning scratchpad (`@modelcontextprotocol/server-sequential-thinking@2.1.1`), disabled in fresh installations.
 - **`memory`**: Local MCP knowledge graph for durable project memory (`~/.config/opencode/memory.json`).
 - **`fetch`**: Lightweight static web content extraction (`mcp-server-fetch`).
-- **`playwright`**: Headless browser automation for dynamic single-page web applications (`@playwright/mcp@0.0.79`).
+- **`playwright`**: Optional headless browser automation (`@playwright/mcp@0.0.85`), disabled in fresh installations.
 - **`rea`** *(opt-in `--with-rea`)*: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — omitted by default to save ~140 tool schemas per turn.
 
-### 3. Vetted Agent Skills (30 Bundled + Gitignored `skills.local/`)
+### 3. Vetted Agent Skills (37 Bundled + Gitignored `skills.local/`)
 - **Core Software Engineering**: `grill-me` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
 - **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
 - **Reverse Engineering (Zero-Overhead Autonomous CLI)**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — autonomously activates pre-installed `rea` CLI during codebase exploration when encountering compiled binaries, `.so`/`.dll`/`.dylib`, APKs, `.asar`, WASM/bytecode, firmware, or minified JS bundles without source (optional full MCP via `bash scripts/activate.sh --with-rea`).
@@ -75,7 +75,7 @@ cd opencode-sage
 # 2. Install all language servers into ~/.local/bin
 bash scripts/install-lsps.sh
 
-# 3. Stage & activate the harness (with automatic timestamped backup)
+# 3. Activate the harness (with a private restore journal)
 bash scripts/activate.sh [--base-url <url>] [--key <api-key>] [--with-rea]
 
 # 4. Verify health with Doctor
@@ -83,12 +83,12 @@ bash scripts/doctor.sh
 ```
 
 ### What `activate.sh` Does:
-1. Backs up existing `~/.config/opencode` configuration, agents, commands, and skills to a timestamped directory (`~/.config/opencode/backup-<YYYYMMDD-HHMMSS>`).
-2. Deploys `reference/opencode.template.json` to `~/.config/opencode/opencode.json` with dynamic endpoint and memory path resolution.
+1. Journals each managed file under `~/.config/opencode/sage/backups/` and prints its restore command.
+2. Merges `reference/opencode.template.json` into `~/.config/opencode/opencode.json`, preserving existing models, providers, permissions, and MCP on/off choices.
 3. Installs subagents into `~/.config/opencode/agent/`.
 4. Installs slash commands into `~/.config/opencode/command/`.
-5. Syncs all 30 vetted skills (plus any gitignored `reference/skills.local/` skills) into `~/.config/opencode/skills/` (pruning retired/orphaned entries).
-6. Deploys global agent protocol rules to `~/.config/opencode/AGENTS.md` and synchronizes optional sibling `hybrid-sage` if present.
+5. Installs all 37 vetted skills plus local overrides, retaining personal extra files and retiring only recorded managed files.
+6. Merges the shared rules into `~/.config/opencode/AGENTS.md`. `--disable-hybrid` disables its MCP registration and retires known auto-loaded Hybrid plugins through the journal.
 
 ---
 
@@ -134,7 +134,7 @@ opencode-sage/
 │   ├── opencode.template.json  # Staged config template
 │   ├── agents/                 # Subagent definitions (orchestrator, reviewer, skeptic, bioinformatician)
 │   ├── commands/               # Slash commands (grill-me, review, red-team, checkpoint, doctor)
-│   └── skills/                 # 30 curated, hardware-portable agent skills + REGISTRY.md
+│   └── skills/                 # 37 curated, hardware-portable agent skills + REGISTRY.md
 └── scripts/                    # Automation scripts
     ├── activate.sh             # Idempotent installer with auto-backup
     ├── doctor.sh               # Health check diagnostic suite
@@ -147,6 +147,7 @@ opencode-sage/
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Bundled upstream skills retain their own terms; see [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Maintaining skill quality
 
@@ -162,3 +163,7 @@ project environments, `uv`/venv, or named conda environments are preferred for P
 Optional Hybrid SAGE routing can connect Antigravity, OpenCode, and Codex when the
 corresponding workers are configured; provider privacy and cost are checked rather
 than inferred from the harness name.
+
+## 2026-11-15 shared upstream refresh
+
+Original Ponytail and grill-me/grilling, refreshed pinned upstream packages, native RTK integration, reversible activation, and disabled-Hybrid handling are documented in [docs/shared-sync.md](docs/shared-sync.md). Use the new installer with `--disable-hybrid` to honor an off choice across MCP and auto-discovered plugin entrypoints. No worker or unrelated package installer runs automatically. Existing provider/model/permission settings and personal skills are preserved.

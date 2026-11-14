@@ -19,3 +19,5 @@ House rules:
 - Validate Nextflow changes with `-stub-run` or `-profile test` before real data.
 
 When editing a pipeline: trace the channel flow end-to-end before changing any process, and state which downstream processes your change affects.
+
+For retained local validation requirements, read `shared/scientific-notes.md` in the client configuration directory.

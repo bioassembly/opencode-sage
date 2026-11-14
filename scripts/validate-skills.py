@@ -49,6 +49,8 @@ def validate(root: Path) -> list[str]:
                 if url.scheme or url.netloc or not url.path or url.path.startswith(('~', '/')):
                     continue
                 path = document.parent / unquote(url.path)
+                if not path.exists() and url.path.startswith(("references/", "reference/")):
+                    path = skill.parent / unquote(url.path)
                 if not path.exists():
                     errors.append(f'{document}: missing local resource {target}')
     return errors
@@ -61,6 +63,9 @@ def main() -> int:
         default = repo / 'skills'
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else default
     errors = validate(root)
+    if (repo / "third_party/lock.json").exists():
+        from validate_vendor import validate as validate_vendor
+        errors.extend(validate_vendor(repo, root))
     for error in errors:
         print(error, file=sys.stderr)
     if errors:

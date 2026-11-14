@@ -55,15 +55,25 @@ Key pages to review:
 
 **Load framework documentation:**
 
-- **MCP Best Practices**: [📋 View Best Practices](https://modelcontextprotocol.io/docs/develop/build-server) - Core guidelines
+- **MCP Best Practices**: [📋 View Best Practices](./reference/mcp_best_practices.md) - Core guidelines
 
 **For TypeScript (recommended):**
-- **TypeScript SDK**: Use WebFetch to load `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md`
-- [⚡ TypeScript Guide](https://github.com/modelcontextprotocol/typescript-sdk) - TypeScript patterns and examples
+
+The TypeScript SDK has two major versions. Pick one before writing code:
+- **v2** (`@modelcontextprotocol/server`): the current stable release. Use it for new servers.
+- **v1** (`@modelcontextprotocol/sdk`): receives bug and security fixes only. Use it only when the project's `package.json` already depends on `@modelcontextprotocol/sdk`, or migrate that project with `npx @modelcontextprotocol/codemod@latest v1-to-v2 .`
+
+If the project already uses v1, tell the user once, in a sentence or two, that v2 (`@modelcontextprotocol/server`) is the current stable release, that v1 receives only bug and security fixes, and that `npx @modelcontextprotocol/codemod@latest v1-to-v2 .` migrates the project. Then continue with v1 unless the user asks to migrate.
+
+Don't mix the two in one project: v1 code samples (imports from `@modelcontextprotocol/sdk/...`) don't apply to v2.
+
+- **TypeScript SDK (v2)**: Use WebFetch to load `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md`; the full docs index is `https://ts.sdk.modelcontextprotocol.io/v2/llms.txt`
+- [⚡ TypeScript Guide (v2)](./reference/node_mcp_server_v2.md) - TypeScript patterns and examples
+- For v1 projects only: `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/v1.x/README.md` and the [TypeScript Guide (v1)](./reference/node_mcp_server.md)
 
 **For Python:**
 - **Python SDK**: Use WebFetch to load `https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md`
-- [🐍 Python Guide](https://github.com/modelcontextprotocol/python-sdk) - Python patterns and examples
+- [🐍 Python Guide](./reference/python_mcp_server.md) - Python patterns and examples
 
 #### 1.4 Plan Your Implementation
 
@@ -80,8 +90,8 @@ Prioritize comprehensive API coverage. List endpoints to implement, starting wit
 #### 2.1 Set Up Project Structure
 
 See language-specific guides for project setup:
-- [⚡ TypeScript Guide](https://github.com/modelcontextprotocol/typescript-sdk) - Project structure, package.json, tsconfig.json
-- [🐍 Python Guide](https://github.com/modelcontextprotocol/python-sdk) - Module organization, dependencies
+- [⚡ TypeScript Guide (v2)](./reference/node_mcp_server_v2.md) - Project structure, package.json, tsconfig.json ([v1](./reference/node_mcp_server.md) for existing v1 projects)
+- [🐍 Python Guide](./reference/python_mcp_server.md) - Module organization, dependencies
 
 #### 2.2 Implement Core Infrastructure
 
@@ -138,6 +148,7 @@ Review for:
 
 **TypeScript:**
 - Run `npm run build` to verify compilation
+- v2 projects: run the self-check script from the [v2 guide](./reference/node_mcp_server_v2.md#verify-your-server) against the built server
 - Test with MCP Inspector: `npx @modelcontextprotocol/inspector`
 
 **Python:**
@@ -152,7 +163,7 @@ See language-specific guides for detailed testing approaches and quality checkli
 
 After implementing your MCP server, create comprehensive evaluations to test its effectiveness.
 
-**Load [✅ Evaluation Guide](reference/evaluation.md) for complete evaluation guidelines.**
+**Load [✅ Evaluation Guide](./reference/evaluation.md) for complete evaluation guidelines.**
 
 #### 4.1 Understand Evaluation Purpose
 
@@ -201,7 +212,7 @@ Load these resources as needed during development:
 
 ### Core MCP Documentation (Load First)
 - **MCP Protocol**: Start with sitemap at `https://modelcontextprotocol.io/sitemap.xml`, then fetch specific pages with `.md` suffix
-- [📋 MCP Best Practices](https://modelcontextprotocol.io/docs/develop/build-server) - Universal MCP guidelines including:
+- [📋 MCP Best Practices](./reference/mcp_best_practices.md) - Universal MCP guidelines including:
   - Server and tool naming conventions
   - Response format guidelines (JSON vs Markdown)
   - Pagination best practices
@@ -210,27 +221,32 @@ Load these resources as needed during development:
 
 ### SDK Documentation (Load During Phase 1/2)
 - **Python SDK**: Fetch from `https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md`
-- **TypeScript SDK**: Fetch from `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md`
+- **TypeScript SDK (v2)**: Fetch from `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md`; full docs index at `https://ts.sdk.modelcontextprotocol.io/v2/llms.txt`
+- **TypeScript SDK (v1, existing v1 projects only)**: Fetch from `https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/v1.x/README.md`
 
 ### Language-Specific Implementation Guides (Load During Phase 2)
-- [🐍 Python Implementation Guide](https://github.com/modelcontextprotocol/python-sdk) - Official Python SDK guide with:
+- [🐍 Python Implementation Guide](./reference/python_mcp_server.md) - Complete Python/FastMCP guide with:
   - Server initialization patterns
   - Pydantic model examples
   - Tool registration with `@mcp.tool`
   - Complete working examples
   - Quality checklist
 
-- [⚡ TypeScript Implementation Guide](https://github.com/modelcontextprotocol/typescript-sdk) - Official TypeScript SDK guide with:
-  - Project structure
-  - Zod schema patterns
-  - Tool registration with `server.registerTool`
-  - Complete working examples
-  - Quality checklist
+- [⚡ TypeScript Implementation Guide (SDK v2)](./reference/node_mcp_server_v2.md) - Complete TypeScript guide for `@modelcontextprotocol/server` with:
+  - Project setup and the server factory
+  - Tool design: Zod 4 schemas, output formats, pagination, errors
+  - A complete example serving stdio and Streamable HTTP, plus bearer auth
+  - Resources, prompts, and notifications
+  - A self-check script to verify the built server
+  - Links to SDK examples for advanced features
+  - A v1 → v2 translation table, migration steps, and a quality checklist
+
+- [⚡ TypeScript Implementation Guide (SDK v1)](./reference/node_mcp_server.md) - The equivalent guide for existing `@modelcontextprotocol/sdk` projects
 
 ### Evaluation Guide (Load During Phase 4)
-- [✅ Evaluation Guide](reference/evaluation.md) - Complete evaluation creation guide with:
+- [✅ Evaluation Guide](./reference/evaluation.md) - Complete evaluation creation guide with:
   - Question creation guidelines
   - Answer verification strategies
-  - A small structured result format
+  - XML format specifications
   - Example questions and answers
-  - Recording executed checks and results
+  - Running an evaluation with the provided scripts

@@ -96,22 +96,21 @@
       "command": [
         "npx",
         "-y",
-        "@modelcontextprotocol/server-sequential-thinking@2026.7.4"
+        "@modelcontextprotocol/server-sequential-thinking@2.1.1"
       ],
-      "enabled": true,
+      "enabled": false,
       "timeout": 15000
     },
     "playwright": {
       "type": "local",
       "command": [
         "npx",
-        "-y",
-        "@playwright/mcp@0.0.79"
+        "--yes",
+        "@playwright/mcp@0.0.85",
+        "--headless",
+        "--isolated"
       ],
-      "enabled": true,
-      "environment": {
-        "PLAYWRIGHT_NO_SANDBOX": "1"
-      }
+      "enabled": false
     },
     "fetch": {
       "type": "local",
@@ -119,19 +118,45 @@
         "uvx",
         "mcp-server-fetch"
       ],
-      "enabled": true
+      "enabled": false
     },
     "memory": {
       "type": "local",
       "command": [
         "npx",
         "-y",
-        "@modelcontextprotocol/server-memory@2026.7.4"
+        "@modelcontextprotocol/server-memory@2.1.1"
       ],
-      "enabled": true,
+      "enabled": false,
       "environment": {
         "MEMORY_FILE_PATH": "__MEMORY_PATH__"
       }
+    },
+    "serena": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "serena-agent==2.1.0",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "agent",
+        "--agent-interface",
+        "tools",
+        "--open-web-dashboard",
+        "false",
+        "--enable-gui-log-window",
+        "false"
+      ],
+      "enabled": true,
+      "timeout": 90000
+    },
+    "openaiDeveloperDocs": {
+      "type": "remote",
+      "url": "https://developers.openai.com/mcp",
+      "enabled": true,
+      "timeout": 20000
     }
   },
   "tool_output": {
@@ -159,7 +184,5 @@
       "wget * | sh": "deny"
     }
   },
-  "plugin": [
-    "@dietrichgebert/ponytail"
-  ]
+  "plugins": []
 }

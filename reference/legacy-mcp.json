@@ -1,0 +1,58 @@
+{
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true,
+      "timeout": 20000
+    },
+    "deepwiki": {
+      "type": "remote",
+      "url": "https://mcp.deepwiki.com/mcp",
+      "enabled": true,
+      "timeout": 20000
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking@2026.7.4"
+      ],
+      "enabled": true,
+      "timeout": 15000
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@0.0.79"
+      ],
+      "enabled": true,
+      "environment": {
+        "PLAYWRIGHT_NO_SANDBOX": "1"
+      }
+    },
+    "fetch": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-server-fetch"
+      ],
+      "enabled": true
+    },
+    "memory": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory@2026.7.4"
+      ],
+      "enabled": true,
+      "environment": {
+        "MEMORY_FILE_PATH": "__MEMORY_PATH__"
+      }
+    }
+  }
+}
