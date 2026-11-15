@@ -5,12 +5,12 @@
     {
       "canonical": "scripts/merge_config.py",
       "target": "scripts/merge_config.py",
-      "sha256": "6b49f5d9646ba5991d2b8bbb10bc31fd947a318c0ec070fed31c3258ee929124"
+      "sha256": "805a682ab2ccc8e18f9cc12e50ff880cba8e8ef806b53c5387c5ebefeece5ecb"
     },
     {
       "canonical": "scripts/install_rtk.py",
       "target": "scripts/install_rtk.py",
-      "sha256": "ad884e72379227a178e1a1173e18f69206806bb233ac308b9edf7deff6649a4c"
+      "sha256": "6e3a451a5c02a357e1be8f631acadd6b93cf39e16cf3319891c739656d93fb7b"
     },
     {
       "canonical": "scripts/token_audit.py",
@@ -30,7 +30,7 @@
     {
       "canonical": "ports/install_client.py",
       "target": "scripts/install_client.py",
-      "sha256": "1d1dccce21bcd362970e23f7be1523192ef8da119e52e9b541544dd5111bc4d1"
+      "sha256": "b38989e53228985df7d8d708642ead6c394a2a2047254557e6e4e15a0040892b"
     },
     {
       "canonical": "ports/validate_vendor.py",
@@ -40,12 +40,12 @@
     {
       "canonical": "tests/test_client_activation.py",
       "target": "tests/test_client_activation.py",
-      "sha256": "678bf17ef23993a209c0e8e17377719cf06d90992a8fc666de38385e1aef0a68"
+      "sha256": "442ceaffc811ab1bed93e2f560dff71cc60a7aae675fe9f63e2840a64ad1f2ed"
     },
     {
       "canonical": "tests/test_client_config.py",
       "target": "tests/test_client_config.py",
-      "sha256": "be0b0fe87f3a8786c24793ed0972aead745651fbf5ea83e23c7a8da66d3402ef"
+      "sha256": "8a998821599bcfabc3a486c5585fb1ffd14ed5b14118b559772e16880e7fc302"
     },
     {
       "canonical": "ports/test_mcp_evaluation.py",
@@ -55,7 +55,7 @@
     {
       "canonical": "config/AGENTS.md",
       "target": "reference/AGENTS.md",
-      "sha256": "e30c2295d491f506c9a9badc7efd68745fc7a104c86207de5ebc195e7279873c"
+      "sha256": "e25c31f04a7017276a9f69dc380fbcb2a7a674eb1ca2d62b083cd250c9113293"
     },
     {
       "canonical": "shared/scientific-notes.md",
@@ -65,7 +65,7 @@
     {
       "canonical": "docs/shared-sync.md",
       "target": "docs/shared-sync.md",
-      "sha256": "8bb6f2339555083e26a110598a95af06dda091376a8f66f05da9afddfc5db52b"
+      "sha256": "3bdef0176931191a919f469ad9238bb61ad40f94c7540972489a17f144301707"
     },
     {
       "canonical": "patches/mcp-evaluation-parallel.patch",

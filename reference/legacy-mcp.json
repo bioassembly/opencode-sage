@@ -53,6 +53,12 @@
       "environment": {
         "MEMORY_FILE_PATH": "__MEMORY_PATH__"
       }
+    },
+    "openaiDeveloperDocs": {
+      "type": "remote",
+      "url": "https://developers.openai.com/mcp",
+      "enabled": true,
+      "timeout": 20000
     }
   }
 }

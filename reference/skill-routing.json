@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "core": [
+    "agentic-coding",
+    "checkpoint",
+    "git-commit-convention",
+    "ponytail",
+    "skill-acquisition",
+    "systematic-debugging",
+    "test-driven-development",
+    "verification-before-completion"
+  ],
+  "rules": [
+    {
+      "skill": "nextflow",
+      "category": "bioinformatics",
+      "summary": "Nextflow DSL2 / nf-core pipelines and HPC/SLURM workflows",
+      "files": ["*.nf", "nextflow.config", "nf-test.config", "modules.json"],
+      "dirs": ["subworkflows", "conf"],
+      "deps": ["nextflow"],
+      "patterns": ["\\bnextflow\\b", "\\bnf-core\\b", "\\bdsl2\\b", "\\bnf-test\\b", "\\bslurm\\b"],
+      "companions": ["fair-data-principles"]
+    },
+    {
+      "skill": "pysam",
+      "category": "bioinformatics",
+      "summary": "SAM/BAM/CRAM, VCF/BCF, FASTQ, tabix, pileup and coverage workflows",
+      "files": ["*.bam", "*.cram", "*.sam", "*.vcf", "*.vcf.gz", "*.bcf", "*.fastq", "*.fastq.gz", "*.fq", "*.fq.gz", "*.bed"],
+      "deps": ["pysam", "cyvcf2", "htslib"],
+      "patterns": ["\\bpysam\\b", "\\bhtslib\\b", "\\b(bam|cram|sam|vcf|bcf|fastq|tabix|pileup)\\b", "\\bpromethion\\b", "\\brev(io)?\\b", "\\bepi2me\\b"]
+    },
+    {
+      "skill": "biopython",
+      "category": "bioinformatics",
+      "summary": "FASTA/GenBank/PDB parsing, phylogenetics, BLAST and NCBI Entrez",
+      "files": ["*.fasta", "*.fa", "*.fna", "*.faa", "*.gb", "*.gbk", "*.pdb"],
+      "deps": ["biopython"],
+      "patterns": ["\\bbiopython\\b", "\\bbio\\.entrez\\b", "\\b(fasta|genbank|pdb|blast|phylogenet|motif)\\b"]
+    },
+    {
+      "skill": "fair-data-principles",
+      "category": "bioinformatics",
+      "summary": "FAIR dataset packaging, metadata dictionaries and scientific provenance",
+      "files": ["codemeta.json", "ro-crate-metadata.json", "datapackage.json"],
+      "patterns": ["\\bfair data\\b", "\\bro-crate\\b", "\\bmetadata dictionary\\b", "\\b(zenodo|figshare|ena|sra)\\b"]
+    },
+    {
+      "skill": "statistical-data-visualization",
+      "category": "science",
+      "summary": "Statistical plot correctness, bias checks and bioinformatics figures",
+      "files": ["*.qmd", "*.Rmd", "_quarto.yml"],
+      "deps": ["matplotlib", "seaborn", "plotly", "ggplot2", "scipy", "statsmodels"],
+      "patterns": ["\\b(volcano|heatmap|boxplot|violin|scatter|pca|umap)\\b", "\\bvisuali[sz]ation\\b", "\\bquarto\\b", "\\bp[- ]?value\\b"]
+    },
+    {
+      "skill": "pipeline-sketch-results",
+      "category": "science",
+      "summary": "Package pipeline outputs into clean numbered deliverables",
+      "patterns": ["\\bresults/? folder\\b", "\\bclient-facing\\b", "\\bpublish pipeline results\\b", "\\bdeliverable\\b"]
+    },
+    {
+      "skill": "first-principles-explainer",
+      "category": "science",
+      "summary": "First-principles breakdowns of complex pipelines and discrepancies",
+      "patterns": ["\\bfirst principles\\b", "\\bexplain why\\b", "\\bdiscrepancy\\b", "\\bfrom scratch intuition\\b"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "category": "web",
+      "summary": "React and Next.js performance, server/client boundaries and bundling",
+      "files": ["next.config.*"],
+      "deps": ["react", "next"],
+      "patterns": ["\\breact\\b", "\\bnext\\.?js\\b", "\\bhydration\\b", "\\bserver component\\b", "\\buseeffect\\b"]
+    },
+    {
+      "skill": "webapp-testing",
+      "category": "web",
+      "summary": "Playwright browser verification, screenshots and local web UI debugging",
+      "files": ["playwright.config.*", "cypress.config.*"],
+      "deps": ["playwright", "@playwright/test", "cypress"],
+      "patterns": ["\\bplaywright\\b", "\\bbrowser test\\b", "\\bweb ?app\\b", "\\be2e\\b", "\\bscreenshot\\b", "\\bfrontend bug\\b"]
+    },
+    {
+      "skill": "web-scraping",
+      "category": "web",
+      "summary": "Extract structured data from web pages and APIs",
+      "deps": ["beautifulsoup4", "scrapy", "cheerio", "puppeteer"],
+      "patterns": ["\\bscrap(e|ing)\\b", "\\bcrawl(ing|er)?\\b", "\\bextract (table|data) from (web|site|html)\\b"]
+    },
+    {
+      "skill": "security-audit",
+      "category": "security",
+      "summary": "OWASP Top-10 audit for auth, injection, XSS, CSRF, SSRF and secrets",
+      "patterns": ["\\bsecurity (audit|review|scan)\\b", "\\bowasp\\b", "\\b(xss|csrf|ssrf|sql injection|idor)\\b", "\\bharden\\b"]
+    },
+    {
+      "skill": "differential-review",
+      "category": "security",
+      "summary": "Security-focused diff, blast radius and git blame regression review",
+      "patterns": ["\\bdifferential review\\b", "\\bdiff review\\b", "\\bblast radius\\b", "\\bpr security\\b"]
+    },
+    {
+      "skill": "variant-analysis",
+      "category": "security",
+      "summary": "Find sibling bug variants across a codebase via patterns/CodeQL/Semgrep",
+      "files": ["*.ql", ".semgrep.yml", ".semgrep.yaml"],
+      "patterns": ["\\bvariant analysis\\b", "\\bother instances\\b", "\\bsame bug\\b", "\\bcodeql\\b", "\\bsemgrep\\b"]
+    },
+    {
+      "skill": "codebase-design",
+      "category": "architecture",
+      "summary": "Deep modules, interface seams, testability and AI-navigable architecture",
+      "files": ["pyproject.toml", "Cargo.toml", "go.mod", "CMakeLists.txt"],
+      "dirs": ["src"],
+      "patterns": ["\\bmodule design\\b", "\\barchitecture\\b", "\\binterface seam\\b", "\\brefactor\\b"]
+    },
+    {
+      "skill": "domain-modeling",
+      "category": "architecture",
+      "summary": "Domain glossary (GLOSSARY.md) and architecture decision records (ADRs)",
+      "files": ["GLOSSARY.md"],
+      "dirs": ["docs/adr", "adr"],
+      "patterns": ["\\bglossary\\b", "\\bdomain model\\b", "\\badr\\b", "\\bubiquitous language\\b"]
+    },
+    {
+      "skill": "grill-with-docs",
+      "category": "architecture",
+      "summary": "Design interview maintaining glossary and significant ADRs",
+      "patterns": ["\\bgrill[- ]with[- ]docs\\b", "\\bgrill[- ]me\\b", "\\bdesign interview\\b", "\\bstress[- ]test.*plan\\b"],
+      "companions": ["grilling", "domain-modeling"]
+    },
+    {
+      "skill": "grilling",
+      "category": "architecture",
+      "summary": "Interactive design questioning to resolve tradeoffs",
+      "patterns": ["\\bgrill me\\b", "\\bgrilling\\b"]
+    },
+    {
+      "skill": "to-spec",
+      "category": "planning",
+      "summary": "Flesh out specifications/PRDs from rough feature ideas",
+      "files": ["PRD.md", "SPEC.md"],
+      "patterns": ["\\bto[- ]spec\\b", "\\bwrite a spec\\b", "\\bprd\\b", "\\bfunctional spec\\b"]
+    },
+    {
+      "skill": "to-tickets",
+      "category": "planning",
+      "summary": "Break specs/PRDs into vertical-slice implementation issues",
+      "patterns": ["\\bto[- ]tickets\\b", "\\bbreak into tickets\\b", "\\bvertical slice\\b", "\\bgithub issues\\b"]
+    },
+    {
+      "skill": "setup-matt-pocock-skills",
+      "category": "planning",
+      "summary": "Initialize project workflow labels/conventions for spec-to-issue flow",
+      "files": ["CLAUDE.md"],
+      "patterns": ["\\bmatt pocock\\b", "\\bready-for-agent\\b"]
+    },
+    {
+      "skill": "github-repo-best-practices",
+      "category": "planning",
+      "summary": "Top-standard README, citation, community health and release layout",
+      "files": ["CITATION.cff", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "patterns": ["\\baudit.*repo\\b", "\\bwrite.*readme\\b", "\\bcitation\\.cff\\b", "\\brelease setup\\b"]
+    },
+    {
+      "skill": "using-git-worktrees",
+      "category": "git",
+      "summary": "Isolated git worktrees for parallel feature work",
+      "patterns": ["\\bworktree\\b", "\\bisolated branch\\b"]
+    },
+    {
+      "skill": "mcp-builder",
+      "category": "tooling",
+      "summary": "Design and evaluate FastMCP / TypeScript MCP servers",
+      "deps": ["fastmcp", "@modelcontextprotocol/sdk"],
+      "patterns": ["\\bmcp server\\b", "\\bfastmcp\\b", "\\bmodel context protocol\\b", "\\bmcp tool\\b"]
+    },
+    {
+      "skill": "pdf-inplace-editing",
+      "category": "documents",
+      "summary": "Zero-drift PDF editing and true anonymization/redaction",
+      "patterns": ["\\bpdf\\b", "\\bredact\\b", "\\banonymiz"]
+    },
+    {
+      "skill": "reverse-engineer-anything",
+      "category": "tooling",
+      "summary": "Inspect binaries, bytecode, wheels or minified bundles cleanly",
+      "patterns": ["\\breverse[- ]engineer\\b", "\\bdecompil", "\\bdisassembl", "\\bbytecode\\b", "\\bminified bundle\\b"]
+    },
+    {
+      "skill": "overnight-explorer",
+      "category": "research",
+      "summary": "Deep unattended multi-branch exploration and reproducible logs",
+      "patterns": ["\\bovernight\\b", "\\bwhile i('m| am)? (away|asleep)\\b", "\\bautonomous exploration\\b"]
+    },
+    {
+      "skill": "skill-maker",
+      "category": "meta",
+      "summary": "Author or refine skills with focused triggers and validation",
+      "files": ["SKILL.md", "third_party/lock.json"],
+      "patterns": ["\\b(author|create|write|improve) a? ?skill\\b", "\\bskill[- ]maker\\b"]
+    },
+    {
+      "skill": "skill-evaluation",
+      "category": "meta",
+      "summary": "Benchmark skills and prompts with A/B assertions",
+      "dirs": ["evals"],
+      "patterns": ["\\bevaluate skill\\b", "\\ba/b compare\\b", "\\bskill[- ]evaluation\\b"]
+    },
+    {
+      "skill": "token-efficiency",
+      "category": "meta",
+      "summary": "Diagnose context bloat and reduce harness token overhead",
+      "files": ["token_audit.py", "shared-sync.json"],
+      "patterns": ["\\btoken efficiency\\b", "\\btoken overhead\\b", "\\bburning tokens\\b", "\\bcontext bloat\\b"]
+    }
+  ]
+}

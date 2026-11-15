@@ -15,7 +15,9 @@ resolve() { # package[@tag] -> package@exact-version
   npm view "$spec" version 2>/dev/null | tail -n1
 }
 
-for pkg in "@modelcontextprotocol/server-sequential-thinking" "@playwright/mcp" "@modelcontextprotocol/server-memory"; do
+MCP_PACKAGES=()
+for pkg in "${@:-${MCP_PACKAGES[@]}}"; do
+  [ -n "$pkg" ] || continue
   ver="$(resolve "$pkg")"
   [ -n "$ver" ] || { echo "could not resolve $pkg" >&2; exit 1; }
   echo "pinning $pkg -> $ver"
@@ -26,5 +28,9 @@ for pkg in "@modelcontextprotocol/server-sequential-thinking" "@playwright/mcp" 
       else . end)
   ' "$CFG" > "$CFG.tmp" && mv "$CFG.tmp" "$CFG"
 done
+
+if [ "$#" -eq 0 ] && [ "${#MCP_PACKAGES[@]}" -eq 0 ]; then
+  echo "no default npx MCP packages configured in $CFG"
+fi
 
 echo "done. Review the diff, re-run activate.sh, restart opencode."

@@ -9,8 +9,8 @@
 ## 🌟 Architecture & Design Philosophy
 
 1. **Native Strengths & LSP Compiler Ground Truth**: Leverages opencode's native `"lsp": true` engine coupled with 12 language servers pre-installed in `~/.local/bin` (covering Python, PHP, TypeScript, Bash, Markdown/Quarto, YAML, HTML, CSS, JSON, ESLint, Tailwind). The agent receives compiler-grade symbol search, type diagnostics, jump-to-definition, and semantic refactoring directly without LLM hallucination.
-2. **Curated Model Context Protocol (MCP) Layer**: Outfitted with a focused, high-throughput MCP server layer: `context7` for real-time framework documentation, `deepwiki` for remote AI-indexed GitHub documentation without token cost, `sequential-thinking` for structured planning, `fetch` for fast static web requests, `playwright` for headless browser workflows, `memory` for durable cross-session project memory, and `rea` (pinned `rea-agents`, compact schema) for reverse engineering binaries and artifacts with no source.
-3. **Persistent Project Memory**: Powered by `@modelcontextprotocol/server-memory`, storing a local knowledge graph (`~/.config/opencode/memory.json`) that preserves durable project architectural decisions, user preferences, and conventions across context compactions and new sessions.
+2. **Lean Curated MCP Layer**: Outfitted with `context7` for library docs, `deepwiki` for public GitHub repo research, `serena` (`serena-agent==2.1.0`) for semantic edits, and opt-in `rea` (`--with-rea`). Redundant servers (`sequential-thinking`, `playwright`, `fetch`, `memory`, `openaiDeveloperDocs`) were pruned and `hybrid-sage` is disabled by default (`--enable-hybrid` to opt in).
+3. **Native Compaction & Auto-Skill Routing**: Configures OpenCode's native `compaction` (`auto: true`, `keep.tokens: 15000`, `buffer: 20000`) plus `sage-skill-router.ts` to keep 8 universal core skills (+ `reference/skills.local/` overrides) loaded by default while dynamically activating the remaining 29 domain skills from `~/.config/opencode/skills-catalog/` per workspace/prompt (`--all-skills` installs all 37 directly).
 4. **Autonomous Execution with Strict Safeguards**: Outfitted with fine-grained permissions and an anchored Deny list (`rm -rf /`, `mkfs`, raw block device writes, unvetted pipe-to-shell executions) combined with subagent permission isolation (`edit: deny` for `reviewer` and `skeptic`).
 
 ---
@@ -29,11 +29,9 @@ Installed directly into `~/.local/bin`:
 ### 2. Model Context Protocol (MCP) Servers
 - **`context7`**: Remote Streamable HTTP MCP for real-time framework & library API documentation (`https://mcp.context7.com/mcp`).
 - **`deepwiki`**: Remote Streamable HTTP MCP for querying AI-indexed GitHub repository wikis and architectures without credentials (`https://mcp.deepwiki.com/mcp`).
-- **`sequential-thinking`**: Optional local MCP structured planning scratchpad (`@modelcontextprotocol/server-sequential-thinking@2.1.1`), disabled in fresh installations.
-- **`memory`**: Local MCP knowledge graph for durable project memory (`~/.config/opencode/memory.json`).
-- **`fetch`**: Lightweight static web content extraction (`mcp-server-fetch`).
-- **`playwright`**: Optional headless browser automation (`@playwright/mcp@0.0.85`), disabled in fresh installations.
+- **`serena`**: Local stdio MCP (`serena-agent==2.1.0`) for semantic symbol navigation and refactoring.
 - **`rea`** *(opt-in `--with-rea`)*: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — omitted by default to save ~140 tool schemas per turn.
+- **`hybrid-sage`**: Disabled by default during activation (`--enable-hybrid` to opt in).
 
 ### 3. Vetted Agent Skills (37 Bundled + Gitignored `skills.local/`)
 - **Core Software Engineering**: `grill-with-docs` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
@@ -75,8 +73,8 @@ cd opencode-sage
 # 2. Install all language servers into ~/.local/bin
 bash scripts/install-lsps.sh
 
-# 3. Activate the harness (with a private restore journal)
-bash scripts/activate.sh [--base-url <url>] [--key <api-key>] [--with-rea]
+# 3. Activate the harness (with a private restore journal; Hybrid disabled by default)
+bash scripts/activate.sh [--base-url <url>] [--key <api-key>] [--with-rea] [--enable-hybrid] [--all-skills]
 
 # 4. Verify health with Doctor
 bash scripts/doctor.sh
@@ -84,11 +82,11 @@ bash scripts/doctor.sh
 
 ### What `activate.sh` Does:
 1. Journals each managed file under `~/.config/opencode/sage/backups/` and prints its restore command.
-2. Merges `reference/opencode.template.json` into `~/.config/opencode/opencode.json`, preserving existing models, providers, permissions, and MCP on/off choices.
+2. Merges `reference/opencode.template.json` into `~/.config/opencode/opencode.json`, retiring unmodified obsolete defaults (`sequential-thinking`, `playwright`, `fetch`, `memory`, `openaiDeveloperDocs`), configuring native `compaction` (`auto: true`, `keep.tokens: 15000`, `buffer: 20000`), and preserving existing models, providers, permissions, and MCP on/off choices.
 3. Installs subagents into `~/.config/opencode/agent/`.
 4. Installs slash commands into `~/.config/opencode/command/`.
-5. Installs all 37 vetted skills plus local overrides, retaining personal extra files and retiring only recorded managed files.
-6. Merges the shared rules into `~/.config/opencode/AGENTS.md`. `--disable-hybrid` disables its MCP registration and retires known auto-loaded Hybrid plugins through the journal.
+5. Installs 8 always-loaded core skills + `reference/skills.local/` overrides into `~/.config/opencode/skills/`, stages the 29 domain skills + `routing.json` under `~/.config/opencode/skills-catalog/`, and installs `~/.config/opencode/plugins/sage-skill-router.ts` (`--all-skills` installs all 37 directly).
+6. Merges the shared rules into `~/.config/opencode/AGENTS.md` and disables `hybrid-sage` + its autoloaded plugins by default (pass `--enable-hybrid` to keep Hybrid enabled).
 
 ---
 

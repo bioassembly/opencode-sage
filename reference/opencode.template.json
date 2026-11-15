@@ -91,47 +91,6 @@
       "enabled": true,
       "timeout": 20000
     },
-    "sequential-thinking": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking@2.1.1"
-      ],
-      "enabled": false,
-      "timeout": 15000
-    },
-    "playwright": {
-      "type": "local",
-      "command": [
-        "npx",
-        "--yes",
-        "@playwright/mcp@0.0.85",
-        "--headless",
-        "--isolated"
-      ],
-      "enabled": false
-    },
-    "fetch": {
-      "type": "local",
-      "command": [
-        "uvx",
-        "mcp-server-fetch"
-      ],
-      "enabled": false
-    },
-    "memory": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-memory@2.1.1"
-      ],
-      "enabled": false,
-      "environment": {
-        "MEMORY_FILE_PATH": "__MEMORY_PATH__"
-      }
-    },
     "serena": {
       "type": "local",
       "command": [
@@ -151,12 +110,6 @@
       ],
       "enabled": true,
       "timeout": 90000
-    },
-    "openaiDeveloperDocs": {
-      "type": "remote",
-      "url": "https://developers.openai.com/mcp",
-      "enabled": true,
-      "timeout": 20000
     }
   },
   "tool_output": {
@@ -164,7 +117,11 @@
     "max_bytes": 16384
   },
   "compaction": {
-    "auto": true
+    "auto": true,
+    "keep": {
+      "tokens": 15000
+    },
+    "buffer": 20000
   },
   "permission": {
     "skill": {

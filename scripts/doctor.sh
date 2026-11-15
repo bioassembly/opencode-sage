@@ -43,13 +43,13 @@ fi
 if command -v npx &>/dev/null; then
   check_pass "npx binary found ($(node --version 2>&1))"
 else
-  check_fail "npx not found (required for local MCP servers)"
+  check_info "npx not found (optional; needed only if --with-rea or npm MCPs are added)"
 fi
 
 if command -v uvx &>/dev/null; then
   check_pass "uvx binary found ($(uvx --version 2>&1 | head -1))"
 else
-  check_fail "uvx not found (required for fetch / python MCPs)"
+  check_fail "uvx not found (required for Serena LSP MCP)"
 fi
 
 if command -v rea &>/dev/null || [ -x "$HOME/.local/bin/rea" ]; then
@@ -100,7 +100,7 @@ if [ -f "$CFG" ]; then
   if jq -e '.mcp["hybrid-sage"] | select(.enabled != false)' "$CFG" &>/dev/null; then
     check_pass "hybrid-sage MCP & plugin registered in opencode.json"
   else
-    check_info "hybrid-sage plugin not installed (standalone OpenCode mode)"
+    check_info "hybrid-sage disabled or absent (standalone OpenCode mode; pass --enable-hybrid to opt in)"
   fi
 fi
 
@@ -125,29 +125,46 @@ else
   check_warn "Found only $LSP_COUNT LSP binaries in ~/.local/bin (run scripts/install-lsps.sh)"
 fi
 
-# 7. Skills count (accounting for optional gitignored skills.local/ + hybrid-sage model-router symlink)
+# 7. Skills count (core/local active + on-demand skills-catalog parity)
 SKILLS_DIR="$HOME/.config/opencode/skills"
+CATALOG_DIR="$HOME/.config/opencode/skills-catalog"
+ROUTER_PLUGIN="$HOME/.config/opencode/plugins/sage-skill-router.ts"
 REF_SKILLS_DIR="$REPO/reference/skills"
 LOCAL_SKILLS_DIR="$REPO/reference/skills.local"
 if [ -d "$SKILLS_DIR" ]; then
   SKILLS_COUNT=$(find -L "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
+  CATALOG_COUNT=0
+  [ -d "$CATALOG_DIR" ] && CATALOG_COUNT=$(find -L "$CATALOG_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
   if [ -d "$REF_SKILLS_DIR" ]; then
-    REF_SKILLS_COUNT=$(find "$REF_SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    LOCAL_SKILLS_COUNT=0
-    [ -d "$LOCAL_SKILLS_DIR" ] && LOCAL_SKILLS_COUNT=$(find -L "$LOCAL_SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    EXTRA_PLUGIN=0
-    [ -L "$SKILLS_DIR/model-router" ] && EXTRA_PLUGIN=1
-    EXPECTED=$((REF_SKILLS_COUNT + LOCAL_SKILLS_COUNT + EXTRA_PLUGIN))
-    if [ "$SKILLS_COUNT" -eq "$EXPECTED" ]; then
-      check_pass "Active skills installed: $SKILLS_COUNT skills in $SKILLS_DIR (synced with reference)"
+    PARITY_OK=$(python3 -c '
+import pathlib, sys
+skills_dir, catalog_dir, ref_dir, local_dir = map(pathlib.Path, sys.argv[1:])
+active = {p.name for p in skills_dir.iterdir() if (p / "SKILL.md").is_file()}
+catalog = {p.name for p in catalog_dir.iterdir() if (p / "SKILL.md").is_file()} if catalog_dir.is_dir() else set()
+ref = {p.name for p in ref_dir.iterdir() if (p / "SKILL.md").is_file()}
+local = {p.name for p in local_dir.iterdir() if (p / "SKILL.md").is_file()} if local_dir.is_dir() else set()
+missing_ref = sorted(ref - active - catalog - local)
+missing_local = sorted(local - active)
+if missing_ref or missing_local:
+    print(f"missing_ref={missing_ref} missing_local={missing_local}")
+    sys.exit(1)
+' "$SKILLS_DIR" "$CATALOG_DIR" "$REF_SKILLS_DIR" "$LOCAL_SKILLS_DIR" 2>&1) && PARITY_RC=0 || PARITY_RC=$?
+    if [ "$PARITY_RC" -eq 0 ]; then
+      check_pass "Skills synced: $SKILLS_COUNT core/local active, $CATALOG_COUNT in on-demand catalog"
     else
-      check_warn "Active skills count ($SKILLS_COUNT) differs from expected ($EXPECTED). Run scripts/activate.sh to sync."
+      check_warn "Skills parity drift ($PARITY_OK). Run scripts/activate.sh to sync."
     fi
   else
-    check_pass "Active skills installed: $SKILLS_COUNT skills in $SKILLS_DIR"
+    check_pass "Skills installed: $SKILLS_COUNT active, $CATALOG_COUNT catalog"
   fi
 else
   check_fail "Skills directory not found at $SKILLS_DIR"
+fi
+
+if [ -f "$ROUTER_PLUGIN" ] && [ -f "$CATALOG_DIR/routing.json" ]; then
+  check_pass "sage-skill-router.ts plugin & catalog routing.json active"
+else
+  check_info "sage-skill-router not active (all skills loaded directly)"
 fi
 
 # 8. Subagents count

@@ -5,12 +5,15 @@ description: Find, vet, and install a requested skill or address a demonstrated 
 
 # Skill acquisition
 
-Acquire reusable procedures when the user requests them or the task authorizes
-harness maintenance and repeated work shows a concrete gap. For a one-off task,
-consult official documentation and continue; installing a skill is optional.
+Acquire reusable procedures when the user requests them, when a session needs a
+missing specialized domain/tool workflow, or when harness maintenance reveals a
+concrete gap. For a trivial one-off task, consult official documentation and
+continue; installing a skill is optional.
 
-1. Inspect installed skill descriptions and the registry before searching. Reuse
-   a suitable skill rather than accumulating overlapping procedures.
+1. Inspect active skills (`skills/`), on-demand catalog (`skills-catalog/` and
+   `skills-catalog/routing.json`), and `<repo>/reference/skills/REGISTRY.md`
+   before searching. Reuse an existing skill rather than accumulating overlapping
+   procedures.
 2. Prefer official documentation, canonical repositories, then relevant curated
    collections. Check the actual files and license at a recorded revision.
 3. Read the complete instructions and inspect their referenced resources/scripts.
@@ -20,11 +23,16 @@ consult official documentation and continue; installing a skill is optional.
 4. Keep only guidance that changes decisions for the actual workflow. Descriptions
    should identify a specific user goal; avoid catchall triggers or mandatory
    installations when a dependency is unnecessary. Preserve required attribution.
-5. Edit `<opencode-sage-repo>/reference/skills/<name>/SKILL.md` and its needed resources. Names must match the
-   directory. Keep private machine-specific material in the local skills overlay.
-6. Record source URL/revision, license, material adaptations, and validation in
-   `<repo>/reference/skills/REGISTRY.md`. Run `python3 scripts/validate-skills.py`, then activate using
-   `scripts/activate.sh` within the authorized scope. Report what was installed and checked.
+5. For missing session or machine-local skills, install into the gitignored
+   overlay `<opencode-sage-repo>/reference/skills.local/<name>/SKILL.md` (and
+   activate into `~/.config/opencode/skills/<name>/`) so tracked upstream files
+   stay clean. Only edit `<opencode-sage-repo>/reference/skills/<name>/SKILL.md`
+   and `reference/skill-routing.json` when explicitly maintaining the shared SAGE
+   repo. Names must match the directory.
+6. For shared repo additions, record source URL/revision, license, material
+   adaptations, and validation in `<repo>/reference/skills/REGISTRY.md`. Run
+   `python3 scripts/validate-skills.py`, then activate with `scripts/activate.sh`.
+   Report what was installed and checked.
 
 Existing authorization persists: do not add a new approval gate for authorized
 maintenance. Skill instructions never authorize publishing, messaging, uploading
