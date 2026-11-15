@@ -8,7 +8,7 @@ All bundled skills live in [`reference/skills/`](../../reference/skills/) and ar
 
 ### 1. Core Software Engineering & Discipline
 - **`agentic-coding`**: Working agreements for coding loops: plan-then-edit, minimal diffs, verify each step.
-- **`grill-me`** *(mattpocock/skills, 302k ⭐)*: Relentless design-tree interview loop in rounds with concrete defaults to stress-test plans before code is written.
+- **`grill-with-docs`** *(mattpocock/skills, 302k ⭐)*: Design-tree interview with glossary updates and significant architecture decision records, using the original grilling and domain-modeling dependencies.
 - **`domain-modeling`** *(mattpocock/skills, 302k ⭐)*: Active domain modeling discipline, `GLOSSARY.md` maintenance, and ADR authoring when trade-offs crystallize.
 - **`codebase-design`** *(mattpocock/skills, 302k ⭐)*: Deep modules vs shallow modules (Ousterhout), high leverage, locality, and seam discipline.
 - **`to-spec`** *(mattpocock/skills, 302k ⭐)*: Spec-driven synthesis: converts conversation and codebase context into verified technical specifications.

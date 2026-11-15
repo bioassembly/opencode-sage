@@ -48,7 +48,7 @@ Uncapped tool dumps silently eat the window until the model "forgets" AGENTS.md 
 |---|---|---|
 | **Subagents** | Separate system prompts + sampling + permissions | `orchestrator`, `reviewer` (read-only), `skeptic` (read-only), `bioinformatician`; built-in `build`/`plan` retuned |
 | **Skills** | On-demand instruction modules loaded by keyword match | 30 bundled skills + optional gitignored `reference/skills.local/` (see [components/skills.md](components/skills.md)) |
-| **Commands** | User-invoked prompt macros | `/grill-me` · `/review` · `/red-team` · `/checkpoint` · `/doctor` |
+| **Commands** | User-invoked prompt macros | `/grill-with-docs` · `/review` · `/red-team` · `/checkpoint` · `/doctor` |
 
 Sampling is per-agent because tasks differ: review wants determinism (temp 0.2), planning wants a little latitude (0.4). Values in [components/agents.md](components/agents.md).
 

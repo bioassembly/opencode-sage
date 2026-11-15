@@ -36,7 +36,7 @@ Installed directly into `~/.local/bin`:
 - **`rea`** *(opt-in `--with-rea`)*: Reverse engineering of native binaries, APKs, firmware, Electron/JS apps, .NET, WASM/EVM via `morluto/rea` (99.9k ⭐, MIT) — omitted by default to save ~140 tool schemas per turn.
 
 ### 3. Vetted Agent Skills (37 Bundled + Gitignored `skills.local/`)
-- **Core Software Engineering**: `grill-me` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
+- **Core Software Engineering**: `grill-with-docs` (mattpocock/skills, 302k ⭐), `domain-modeling` (mattpocock/skills), `codebase-design` (mattpocock/skills), `to-spec` (mattpocock/skills), `to-tickets` (mattpocock/skills), `agentic-coding`, `test-driven-development` (obra/superpowers, 296k ⭐), `using-git-worktrees` (obra/superpowers), `systematic-debugging`, `verification-before-completion`, `git-commit-convention`, `github-repo-best-practices`, `security-audit`, `webapp-testing` (anthropics/skills, 180k ⭐), `mcp-builder`.
 - **Bioinformatics & Scientific Stack**: `nextflow` (K-Dense-AI, 47.9k ⭐), `pysam` (K-Dense-AI), `biopython` (K-Dense-AI), `statistical-data-visualization`, `pipeline-sketch-results`, `fair-data-principles`, `first-principles-explainer`.
 - **Reverse Engineering (Zero-Overhead Autonomous CLI)**: `reverse-engineer-anything` (morluto/rea, 99.9k ⭐, MIT) — autonomously activates pre-installed `rea` CLI during codebase exploration when encountering compiled binaries, `.so`/`.dll`/`.dylib`, APKs, `.asar`, WASM/bytecode, firmware, or minified JS bundles without source (optional full MCP via `bash scripts/activate.sh --with-rea`).
 - **Autonomous Discovery & Context Discipline**: `overnight-explorer` (unattended multi-iteration research/dataset/codebase exploration while the host is away), `token-efficiency`, `skill-acquisition`, `skill-evaluation`, `skill-maker`, `web-scraping`, `pdf-inplace-editing` *(plus `model-router` when optional sibling `hybrid-sage` is present, and any machine-private skills placed in gitignored `reference/skills.local/`)*.
@@ -48,7 +48,7 @@ Installed directly into `~/.local/bin`:
 - **`bioinformatician`**: Specialized persona for Nextflow DSL2, nf-core conventions, Quarto reporting, conda environments, and genomic QC workflows.
 
 ### 5. Interactive Slash Commands (`~/.config/opencode/command/`)
-- `/grill-me`: Relentless design-tree interview to stress-test architecture & plans before building.
+- `/grill-with-docs`: Design-tree interview that maintains the glossary and records significant architecture decisions.
 - `/review`: Proactive git working diff review via `reviewer` subagent.
 - `/red-team`: Adversarial pre-implementation plan attack via `skeptic` subagent.
 - `/checkpoint`: Context dump to `NOTES.md` before compaction or session boundary.
@@ -133,7 +133,7 @@ opencode-sage/
 │   ├── AGENTS.md               # Global agent instructions
 │   ├── opencode.template.json  # Staged config template
 │   ├── agents/                 # Subagent definitions (orchestrator, reviewer, skeptic, bioinformatician)
-│   ├── commands/               # Slash commands (grill-me, review, red-team, checkpoint, doctor)
+│   ├── commands/               # Slash commands (grill-with-docs, review, red-team, checkpoint, doctor)
 │   └── skills/                 # 37 curated, hardware-portable agent skills + REGISTRY.md
 └── scripts/                    # Automation scripts
     ├── activate.sh             # Idempotent installer with auto-backup
@@ -166,4 +166,4 @@ than inferred from the harness name.
 
 ## 2026-11-15 shared upstream refresh
 
-Original Ponytail and grill-me/grilling, refreshed pinned upstream packages, native RTK integration, reversible activation, and disabled-Hybrid handling are documented in [docs/shared-sync.md](docs/shared-sync.md). Use the new installer with `--disable-hybrid` to honor an off choice across MCP and auto-discovered plugin entrypoints. No worker or unrelated package installer runs automatically. Existing provider/model/permission settings and personal skills are preserved.
+Original Ponytail and grill-with-docs with full grilling/domain-modeling dependencies, refreshed pinned upstream packages, native RTK integration, reversible activation, and disabled-Hybrid handling are documented in [docs/shared-sync.md](docs/shared-sync.md). Use the new installer with `--disable-hybrid` to honor an off choice across MCP and auto-discovered plugin entrypoints. No worker or unrelated package installer runs automatically. Existing provider/model/permission settings and personal skills are preserved.

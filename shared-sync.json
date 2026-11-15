@@ -65,7 +65,7 @@
     {
       "canonical": "docs/shared-sync.md",
       "target": "docs/shared-sync.md",
-      "sha256": "dd00ed29097dd4535ec41b6fca653dabeb1bdc490955a11e46d1af9426752487"
+      "sha256": "8bb6f2339555083e26a110598a95af06dda091376a8f66f05da9afddfc5db52b"
     },
     {
       "canonical": "patches/mcp-evaluation-parallel.patch",

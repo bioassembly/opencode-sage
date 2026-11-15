@@ -1,6 +1,7 @@
 # Third-party notices
 
-`skills/ponytail`, `skills/grill-me`, and `skills/grilling` are original pinned
+`reference/skills/ponytail`, `reference/skills/grill-with-docs`, `reference/skills/grilling`, and
+`reference/skills/domain-modeling` are original pinned
 upstream packages from DietrichGebert/ponytail and mattpocock/skills. Their complete
 files and original invocation policies are preserved. Native loader mapping lives
 outside the packages. Reviewed revisions and original hashes are tracked in the
@@ -33,7 +34,7 @@ SOFTWARE.
 
 ## Unmodified Trail of Bits skills
 
-`skills/variant-analysis` and `skills/differential-review` are unmodified skill
+`reference/skills/variant-analysis` and `reference/skills/differential-review` are unmodified skill
 directories from [trailofbits/skills](https://github.com/trailofbits/skills),
 including their authors' assets and references. Trail of Bits retains attribution.
 They are licensed separately under CC-BY-SA-4.0; the complete upstream license is
@@ -43,7 +44,7 @@ No endorsement by Trail of Bits is implied.
 
 ## Unmodified Vercel skill
 
-`skills/vercel-react-best-practices` is the unmodified `skills/react-best-practices`
+`reference/skills/vercel-react-best-practices` is the unmodified `reference/skills/react-best-practices`
 directory from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
 The upstream skill identifies Vercel as author and declares MIT in its frontmatter.
 The reviewed repository tree contains no separate LICENSE file; this distribution
@@ -72,4 +73,4 @@ identifies the respective library licenses.
 One Anthropic MCP evaluation helper has an explicit correctness patch to process
 all tool requests in a response. The original source hash, patched hash, and
 patch file are recorded. Three Vercel compiled-guide aliases are also declared.
-Ponytail and both grilling packages have no content patches.
+Ponytail, grill-with-docs, grilling, and domain-modeling have no content patches.

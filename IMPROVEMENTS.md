@@ -171,3 +171,5 @@ Restored original Ponytail/grill-me behavior and installed the full grilling/set
 ## 2026-11-15 — Original upstream packages and reversible shared integration
 
 Complete source packages/resources are pinned in third_party/lock.json. Original Ponytail and grilling text is unchanged. Native skill routing, compiled-guide compatibility aliases, and the independently tested MCP parallel-result correction are recorded outside or alongside the relevant upstream files. Shared installers preserve preferences, local skill overrides, personal plugin files and user notes, and journal explicit Hybrid deactivation including auto-discovered plugins. No model job or provider change is required to update the harness. See docs/shared-sync.md.
+
+Replaced grill-me with the original grill-with-docs package at the user’s request. The wrapper loads full grilling and domain-modeling skills to interview while maintaining domain terms and significant ADRs. The OpenCode command uses its writing-capable build agent; installation does not create project documents or invoke a model.
